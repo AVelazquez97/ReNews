@@ -11,6 +11,8 @@ A simple Tech news blog, made with React and a PHP REST API
 - [3. Compilation and execution of the script](#3-compilation-and-execution-of-the-project)
   - [A. Compilation](#a-compilation)
   - [B. Execution](#b-execution)
+    - [Frontend](#frontend)
+    - [Backend](#backend)
 
 
 # Summary
@@ -50,40 +52,58 @@ The main objective of this activity is to create an SPA application...
 
 ## A. Installation and execution of XAMPP
 
-- Download the XAMPP installer from the official website: [XAMPP](https://www.apachefriends.org/index.html).
- 
+1. Download the XAMPP installer from the official website: [XAMPP](https://www.apachefriends.org/index.html).
   Usually, is installed inside `/opt/` folder. 
+  
+2. Then, is recommended to add the followings lines to the `~/.bashrc` file, to make it easier to run the server and 
+ execute php:
 
+    ```
+    export "PATH=$PATH:/opt/lampp/bin:$PATH"
+    export "PATH=$PATH:/opt/lampp:$PATH" 
+    ```
 
-- After installed, run the server with the following command:
+    Consider to edit the `~/.bashrc` file with the following command:
+
+    ```bash
+    nano ~/.bashrc
+    ```
+3. And, apply the changes with the following command:
+
+    ```bash
+    source ~/.bashrc
+    ```
     
-  ```bash
-  sudo /opt/lampp/lampp start
-  ```
-## B. Installation of Composer
+4. Repeat the stepts 2 and 3 but sudo su, to make the changes permanent.
 
-  On backend folder, composer is already installed. But, if you want to install it globally, you must run the 
-   following commands:
+5. After installed, run the server with the following command:
+    
+    ```bash
+    sudo /opt/lampp/lampp start
+    ```
+## B. Installation of Composer
+  On the project's root folder, composer is already installed. But, if you want to install it globally, you must 
+  run the following commands:
 
   - Download the installer:
 
     ```bash
-    /opt/lampp/bin/php -r "copy('https://getcomposer.org/installer','composer-setup.php');"
+    php -r "copy('https://getcomposer.org/installer','composer-setup.php');"
     ```
 
-  - Install Composer and move it to the `/usr/local/bin` folder:
+  - Install Composer and move it to the `/opt/lampp/bin` folder:
     ```bash
-    /opt/lampp/bin/php  composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    php composer-setup.php --install-dir=/opt/lampp/bin --filename=composer
     ```
 
   - Delete the installer:
     ```bash
-    /opt/lampp/bin/php -r "unlink('composer-setup.php');"
+    php -r "unlink('composer-setup.php');"
     ```
 
   - Check the installation:
     ```bash
-    /opt/lampp/bin/php /usr/local/bin/composer --V
+    php composer -V
     ```
 
 ## C. Creation of the Database
@@ -91,16 +111,10 @@ The main objective of this activity is to create an SPA application...
 - You can access to MySQL Server with PHPMyAdmin or any other client. Also, can be accessed from command line, 
   with the following command:
 
-   ```bash
-   /opt/lampp/bin/mysql -h localhost -u root
-   ```
-   But first, you must access to the MySQL/MariaDB conf file (`/opt/lampp/etc/my.cnf`) and edit the password field, in the `[client]` section.
-   
-   You can do that with this command:
-   ```bash
-   nano /opt/lampp/etc/my.cnf
-   ```
-
+  ```bash
+  mysql -h localhost -u root
+  ```
+  
 
 - DB creation and user assignment:
 
@@ -112,22 +126,34 @@ The main objective of this activity is to create an SPA application...
   The user to be used for the connection must be created with the following command:
 
   ```
-  CREATE USER reNewsAdmin@localhost IDENTIFIED BY "renews";
+  CREATE USER admin@localhost IDENTIFIED BY "admin";
   ```
   
   And grant all privileges to the user with the following command:
   ```
-  GRANT ALL PRIVILEGES ON reNews.* TO reNewsAdmin@localhost WITH GRANT OPTION;
+  GRANT ALL PRIVILEGES ON reNews.* TO admin@localhost WITH GRANT OPTION;
   ```
 
 - Creation of the tables:
 
+  - Users table:
+  ```
+  CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    nickname VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    is_admin BOOLEAN DEFAULT FALSE
+  );
+  ```
+
 ## D. Downloading the project from GitHub
 
 - To download the project it is necessary to have Git installed. Then, it is enough to enter the terminal and 
-  enter the following command:
+  enter the followings commands:
 
   ```bash
+  cd /opt/lampp/htdocs
   git clone https://github.com/ignfer/ReNews.git
   ```
 
@@ -139,12 +165,13 @@ The main objective of this activity is to create an SPA application...
 
 ### Frontend:
 
-  1. `cd Frontend`
-
-  2. `npm install`
-
-  3. `npm run dev`
+1. `cd Frontend`
+2. `npm install`
+3. `npm run dev`
 
 ### Backend:
 
-  1. `cd Backend`
+1. `cd Backend`
+2. `mv envExample .env`
+3. `composer install`
+4. `php spark serve`
