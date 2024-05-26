@@ -1,3 +1,4 @@
+![logo](https://github.com/ignfer/ReNews/blob/main/renews%20logo.png)
 # ReNews
 A simple Tech news blog, made with React and a PHP REST API
 
