@@ -1,4 +1,4 @@
-![logo](https://github.com/ignfer/ReNews/blob/main/renews%20logo.png)
+![logo](https://github.com/ignfer/ReNews/blob/main/renews-logo.png)
 # ReNews
 A simple Tech news blog, made with React and a PHP REST API
 
@@ -174,5 +174,4 @@ The main objective of this activity is to create an SPA application...
 
 1. `cd Backend`
 2. `mv envExample .env`
-3. `composer install`
-4. `php spark serve`
+3. `php spark serve`
