@@ -8,7 +8,6 @@
 
 .pageContent {
   animation: fadeEffect 0.5s;
-  animation: inverseFadeEffect 0.5s;
 }
 
 @keyframes fadeEffect {
