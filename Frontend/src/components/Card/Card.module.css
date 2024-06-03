@@ -1,0 +1,12 @@
+.card-custom {
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.card-custom:hover {
+    transition: all 0.2s;
+    transform: scale(1.01);
+    border-color: var(--bs-primary);
+
+    box-shadow: #dadada 0px 0px 10px 0px;
+}
