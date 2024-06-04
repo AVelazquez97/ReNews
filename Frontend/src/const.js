@@ -25,3 +25,13 @@ export const IMG_PROPS = {
     home_card_img_2: './wrench-svgrepo-com.svg',
     home_card_img_3: './tech-laptop-svgrepo-com.svg',
 }
+
+export const LOGIN_DATA_INITIAL_STATE = {
+    email: "",
+    password: "",
+    name: "",
+    surname: "",
+    username: "",
+    password_repeat: "",
+    profile_image: "",
+}
