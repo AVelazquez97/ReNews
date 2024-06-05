@@ -12,9 +12,9 @@ function App() {
   const [spaPath, setSpaPath] = useState(SPA_PATH.LOGIN)
 
   return (
-      <div>
-          <Header setSpaPath={setSpaPath}/>
-              {spaPath === SPA_PATH.LOGIN && <Login />}
+      <div className={"d-flex flex-column h-100"}>
+          <Header spaPath={spaPath} setSpaPath={setSpaPath}/>
+              {spaPath === SPA_PATH.LOGIN && <Login setSpaPath={setSpaPath}/>}
               {spaPath === SPA_PATH.HOME && <Home />}
               {spaPath === SPA_PATH.FEED && <Feed />}
               {spaPath === SPA_PATH.PROFILE && <Profile />}
