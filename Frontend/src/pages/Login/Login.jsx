@@ -1,13 +1,14 @@
-import {LOGIN_DATA_INITIAL_STATE} from "../../const.js";
+import {LOGIN_DATA_INITIAL_STATE, SPA_PATH} from "../../const.js";
 import Container from "../../components/Container/Container.jsx";
 import {useState} from "react";
 
-export default function Login(){
+export default function Login({setSpaPath}){
     const [view, setView] = useState("login");
     const [loginData, setLoginData] = useState(LOGIN_DATA_INITIAL_STATE);
 
     function handleLogin(){
         console.log("login...");
+        setSpaPath(SPA_PATH.HOME);
     }
 
     function handleRegister(){
@@ -33,7 +34,7 @@ export default function Login(){
     }
 
     return (
-        <div className={"pageContent d-flex justify-content-center"}>
+        <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
             <Container>
                 <p className={"fs-1 fw-bold"}>{view === "login" ? "Login" : "Registrarse"}</p>
                 <form className={"text-start"}>
@@ -82,10 +83,10 @@ export default function Login(){
                     {view === "login" ?
                         <>
                             <button className="btn btn-primary" onClick={() => setView("register")}>Registrarse</button>
-                            <button className="btn btn-success" onClick={() => handleLogin()}>Iniciar sesión</button>
+                            <button className="btn btn-dark" onClick={() => handleLogin()}>Iniciar sesión</button>
                         </>
                         :
-                        <button className="btn btn-success" onClick={() => handleRegister()}>Enviar</button>
+                        <button className="btn btn-primary" onClick={() => handleRegister()}>Enviar</button>
                 }
                 </div>
             </Container>
