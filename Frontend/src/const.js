@@ -43,3 +43,5 @@ export const LOGIN_DATA_INITIAL_STATE = {
     password_repeat: "",
     profile_image: "",
 }
+
+export const POST_DATA_INITIAL_STATE = { title: "", body: "", tags: [] }

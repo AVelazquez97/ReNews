@@ -270,3 +270,88 @@ export const HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE = {
         }
     ]
 }
+
+export const FEED_GET_TAGS_PLACEHOLDER_RESPONSE = {
+    "tags": [
+        {
+            "id": "1",
+            "name": "Artificial Intelligence"
+        },
+        {
+            "id": "2",
+            "name": "Machine Learning"
+        },
+        {
+            "id": "3",
+            "name": "Data Science"
+        },
+        {
+            "id": "4",
+            "name": "Cybersecurity"
+        },
+        {
+            "id": "5",
+            "name": "Cloud Computing"
+        },
+        {
+            "id": "6",
+            "name": "DevOps"
+        },
+        {
+            "id": "7",
+            "name": "Web Development"
+        },
+        {
+            "id": "8",
+            "name": "Mobile Development"
+        },
+        {
+            "id": "9",
+            "name": "Blockchain"
+        },
+        {
+            "id": "10",
+            "name": "Internet of Things"
+        },
+        {
+            "id": "11",
+            "name": "Software Engineering"
+        },
+        {
+            "id": "12",
+            "name": "Agile Methodologies"
+        },
+        {
+            "id": "13",
+            "name": "Big Data"
+        },
+        {
+            "id": "14",
+            "name": "AR/VR"
+        },
+        {
+            "id": "15",
+            "name": "Quantum Computing"
+        },
+        {
+            "id": "16",
+            "name": "UI/UX Design"
+        },
+        {
+            "id": "17",
+            "name": "Microservices"
+        },
+        {
+            "id": "18",
+            "name": "API Development"
+        },
+        {
+            "id": "19",
+            "name": "Containerization"
+        },
+        {
+            "id": "20",
+            "name": "SaaS"
+        }
+    ]
+}
