@@ -12,11 +12,11 @@ export default function Header({spaPath, setSpaPath}){
                 <div className="d-flex flex-row flex-wrap">
                     {spaPath !== SPA_PATH.LOGIN &&
                         <>
-                            <btn className="btn btn-dark" onClick={() => setRoute(SPA_PATH.LOGIN)}>Login</btn>
-                            <btn className="btn btn-dark" onClick={() => setRoute(SPA_PATH.HOME)}>Inicio</btn>
-                            <btn className="btn btn-dark" onClick={() => setRoute(SPA_PATH.FEED)}>Feed</btn>
-                            <btn className="btn btn-dark" onClick={() => setRoute(SPA_PATH.PROFILE)}>Perfil</btn>
-                            <btn className="btn btn-dark" onClick={() => setRoute(SPA_PATH.PENDING)}>Pendientes</btn>
+                            <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.LOGIN)}>Login</btn>
+                            <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.HOME)}>Inicio</btn>
+                            <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.FEED)}>Feed</btn>
+                            <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.PROFILE)}>Perfil</btn>
+                            <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.PENDING)}>Pendientes</btn>
                             <img width={25} height={25} alt={"avatar"} src={"./default-profile-picture.jpg"}
                                  className={"rounded-circle m-2"}/>
                         </>

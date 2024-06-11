@@ -1,10 +1,33 @@
 import Card from "../../components/Card/Card.jsx";
-import { PLACEHOLDER_TEXT_PROPS, TEXT_PROPS, IMG_PROPS } from "../../const.js";
+import { TEXT_PROPS, IMG_PROPS } from "../../const.js";
+import { HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE } from "../../placeholderResponses.js";
 import ImageCard from "../../components/ImageCard/ImageCard.jsx";
+import PostCard from "../../components/PostCard/PostCard.jsx";
+import {useEffect, useState} from "react";
+import PostModal from "../../components/Modals/PostModal.jsx";
 
 export default function Home({}){
+    const [trendingPosts, setTrendingPosts] = useState([]);
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        setTrendingPosts(JSON.parse(JSON.stringify(HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE.posts)));
+    }, []);
+
+    function handlePostClick(post) {
+        setSelectedPost(post);
+        setIsModalOpen(true);
+    }
+
+    function handleCloseModal() {
+        setIsModalOpen(false);
+        setSelectedPost(null);
+    }
+
     return (
         <div className={"flex-grow-1 d-flex flex-column h-100 bg-white pageContent overflow-y-scroll"}>
+            { selectedPost && <PostModal post={selectedPost} onClose={handleCloseModal} isOpen={isModalOpen}/>}
             <div className="container text-center p-2">
                 <div className="row d-flex flex-wrap flex-column justify-content-center align-items-center">
                     <div className="col mt-2">
@@ -23,18 +46,14 @@ export default function Home({}){
             </div>
             <div className="container text-center p-2">
                 <div className="row mb-2">
-                    <p className={"fs-5 fw-bold"}> Post en tendencia </p>
-                    <div className="row mb-2">
-                        <Card isPostCard={true} title={PLACEHOLDER_TEXT_PROPS.card_title}
-                              description={PLACEHOLDER_TEXT_PROPS.card_description} width={"100%"}/>
-                    </div>
-                    <div className="row mb-2">
-                        <Card isPostCard={true} title={PLACEHOLDER_TEXT_PROPS.card_title}
-                              description={PLACEHOLDER_TEXT_PROPS.card_description} width={"100%"}/>
-                    </div>
-                    <div className="row mb-2">
-                        <Card isPostCard={true} title={PLACEHOLDER_TEXT_PROPS.card_title}
-                              description={PLACEHOLDER_TEXT_PROPS.card_description} width={"100%"}/>
+                    <p className={"fs-5 fw-bold"}> 🚀 Posts en tendencia </p>
+                    <div className="row mb-2 gap-2">
+                        {trendingPosts.map(post => {
+                            return (
+                                <PostCard key={post.id} post={post}
+                                          width={"100%"} onClick={() => handlePostClick(post)}/>
+                            )
+                        })}
                     </div>
                 </div>
             </div>

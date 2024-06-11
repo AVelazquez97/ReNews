@@ -82,11 +82,11 @@ export default function Login({setSpaPath}){
                 <div className={"d-flex justify-content-end gap-2"}>
                     {view === "login" ?
                         <>
-                            <button className="btn btn-primary" onClick={() => setView("register")}>Registrarse</button>
-                            <button className="btn btn-dark" onClick={() => handleLogin()}>Iniciar sesión</button>
+                            <button className="btn btn-primary fw-bold" onClick={() => setView("register")}>Registrarse</button>
+                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin()}>Iniciar sesión</button>
                         </>
                         :
-                        <button className="btn btn-primary" onClick={() => handleRegister()}>Enviar</button>
+                        <button className="btn btn-primary fw-bold" onClick={() => handleRegister()}>Enviar</button>
                 }
                 </div>
             </Container>

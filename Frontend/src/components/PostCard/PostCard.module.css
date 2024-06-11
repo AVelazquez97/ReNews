@@ -1,0 +1,12 @@
+.postCard-custom {
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.postCard-custom:hover {
+    transition: all 0.2s;
+    transform: scale(1.005);
+    border-color: var(--bs-success);
+
+    box-shadow: #dadada 0px 0px 10px 0px;
+}
