@@ -1,5 +1,4 @@
 import styles from "./PostCard.module.css";
-import PostModal from "../Modals/PostModal.jsx";
 export default function PostCard ({ post, onClick = () => {}, date,
                                   textAlign = "start", height = "auto", width = "auto"}) {
 
