@@ -45,3 +45,10 @@ export const LOGIN_DATA_INITIAL_STATE = {
 }
 
 export const POST_DATA_INITIAL_STATE = { title: "", body: "", tags: [] }
+
+export const PROFILE_DATA_INITIAL_STATE = {
+    name: "",
+    surname: "",
+    username: "",
+    profile_image: "",
+}

@@ -36,7 +36,7 @@ export default function Login({setSpaPath}){
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
             <Container>
-                <p className={"fs-1 fw-bold"}>{view === "login" ? "Login" : "Registrarse"}</p>
+                <p className={"fs-3 fw-bold"}>{view === "login" ? "Login" : "Registrarse"}</p>
                 <form className={"text-start"}>
                     <div className="mb-3">
                         <label className="form-label">Dirección de correo</label>

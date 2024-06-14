@@ -10,3 +10,13 @@
 
     box-shadow: #dadada 0px 0px 10px 0px;
 }
+
+.card-custom > div > img {
+    transition: all 0.2s;
+}
+
+.card-custom:hover > div > img {
+    transition: all 0.2s;
+    transform: translateY(10px);
+    transform: rotate(15deg);
+}

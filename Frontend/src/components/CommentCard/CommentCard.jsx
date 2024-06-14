@@ -7,7 +7,6 @@ export default function CommentCard({owner, commentary}){
             </div>
             <div className={"d-flex flex-column justify-content-center gap-2"}>
                 <button className={"btn btn-danger fw-bold w-100"}>Eliminar</button>
-                <button className={"btn btn-primary fw-bold w-100"}>Placeholder</button>
             </div>
         </div>
     )

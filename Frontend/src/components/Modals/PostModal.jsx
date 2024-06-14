@@ -11,7 +11,13 @@ export default function PostModal({post,onClose}){
     return (
         <Modal show onHide={onClose}>
             <Modal.Header closeButton>
-                <Modal.Title className={"fw-bold"}>{`Leyendo post #${id}`}</Modal.Title>
+                <Modal.Title className={"fw-bold d-flex flex-row justify-content-between align-items-center w-100"}>
+                    {`Leyendo post #${id}`}
+                    <div className={"d-flex gap-2"}>
+                        <Button className={"btn btn-primary fw-bold p-1"} onClick={onClose}>Favorito</Button>
+                        <Button className={"btn btn-danger fw-bold p-1"} onClick={onClose}>Eliminar Post</Button>
+                    </div>
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body className={"d-flex flex-column justify-content-center align-items-center"}>
                 <h4 className={"fw-semibold"}> {owner_id} - {title} - {formattedDate}</h4>
