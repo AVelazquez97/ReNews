@@ -1,19 +1,22 @@
 ![logo](https://github.com/ignfer/ReNews/blob/main/renews-logo.png)
 # ReNews
-A simple Tech news blog, made with React and a PHP REST API
+A simple Tech news blog, with a React frontend and a CodeIgniter backend.
 
 - [Summary](#summary)
 - [1. Stack](#1-stack)
 - [2. Preliminary Considerations](#2-preliminary-considerations)
-  - [A. Installation and execution of MySQL Server](#a-installation-and-execution-of-xampp)
-  - [B. Installation of Composer](#b-installation-of-composer)
-  - [C. Creation of the Database](#c-creation-of-the-database)
-  - [D. Downloading the project from GitHub](#d-downloading-the-project-from-github)
-- [3. Compilation and execution of the script](#3-compilation-and-execution-of-the-project)
-  - [A. Compilation](#a-compilation)
-  - [B. Execution](#b-execution)
-    - [Frontend](#frontend)
-    - [Backend](#backend)
+  - [Frontend](#frontend)
+    - [Instalation of Node.js and npm](#instalation-of-nodejs-and-npm)
+  - [Backend](#backend)
+    - [A. Installation of Apache Server](#a-installation-of-apache-server)
+    - [B. Installation of PHP and Extensions](#b-installation-of-php-and-extensions)
+    - [C. Installation of Composer](#c-installation-of-composer)
+    - [D. Creation of the Database](#d-installation-and-excution-of-mysql-server)
+    - [E. Database creation and user assignment](#e-database-creation-and-user-assignment)
+- [3. Downloading the project from GitHub](#3-downloading-the-project-from-github)
+- [4. Proyect execution on local server](#4-proyect-execution-on-local-server)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
 
 
 # Summary
@@ -36,12 +39,11 @@ The main objective of this activity is to create an SPA application...
 
 - Backend:
 
-  - [XAMPP](https://www.apachefriends.org/index.html) 🚀
-    - [PHP  8.1.xx](https://www.php.net/manual/en/) 🐘
-    - [MariaDB 10.4.xx](https://mariadb.org/) 🐬
-    - [Apache/2.4.xx (Unix)](https://httpd.apache.org/) 🦊
-  - [CodeIgniter 4](https://codeigniter.com/) 🎸
-  - [Composer](https://getcomposer.org/) 🎼
+  - [Apache/2.4.xx (Unix)](https://httpd.apache.org/) 🦊
+  - [PHP  8.1.xx](https://www.php.net/manual/en/) 🐘
+  - [CodeIgniter 4.5.xx](https://codeigniter.com/) 🎸
+  - [MySQL 8.0.37-0ubuntu0.20.04.3](https://dev.mysql.com/doc/) 🐬
+  - [Composer 2.7.xx](https://getcomposer.org/) 🎼
 
 - Miscellaneous:
 
@@ -51,148 +53,233 @@ The main objective of this activity is to create an SPA application...
 
 # 2. Preliminary Considerations
 
-## A. Installation and execution of XAMPP
+## Frontend:
 
-1. Download the XAMPP installer from the official website: [XAMPP](https://www.apachefriends.org/index.html).
-  Usually, is installed inside `/opt/` folder. 
-  
-2. Then, is recommended to add the followings lines to the `~/.bashrc` file, to make it easier to run the server and 
- execute php:
+### Instalation of Node.js and npm:
 
+1. To install Node.js and npm, you can use FNM (Fast Node Manager) with the following commands:
+
+    ```bash
+    curl -fsSL https://fnm.vercel.app/install | bash
+    ```    
+
+2. Then, is recommended to add the followings lines to the `~/.bashrc` file:
+    ```bash
+    # fnm
+    FNM_PATH="/home/phpdev/.local/share/fnm"
+    if [ -d "$FNM_PATH" ]; then
+    export PATH="$FNM_PATH:$PATH"
+    eval "`fnm env`"
+    fi
     ```
-    export "PATH=$PATH:/opt/lampp/bin:$PATH"
-    export "PATH=$PATH:/opt/lampp:$PATH" 
-    ```
-
+    
     Consider to edit the `~/.bashrc` file with the following command:
-
     ```bash
     nano ~/.bashrc
     ```
-3. And, apply the changes with the following command:
 
+3. And, apply the changes with the following command:
     ```bash
     source ~/.bashrc
     ```
-    
-4. Repeat the stepts 2 and 3 but sudo su, to make the changes permanent.
 
-5. After installed, run the server with the following command:
-    
+4. One FNM is installed, you can install the desired version of Node.js with the following command:
     ```bash
-    sudo /opt/lampp/lampp start
+    fnm use --install-if-missing 20
+    ``` 
+5. Check the installation with the following commands:
+    ```bash
+    node --version
+    npm --version
     ```
-## B. Installation of Composer
-  On the project's root folder, composer is already installed. But, if you want to install it globally, you must 
-  run the following commands:
 
-  - Update linux packages:
+## Backend:
+
+### A. Installation of Apache Server
+
+1. To install Apache Server, you can use the following commands:
 
     ```bash
     sudo apt update
+    sudo apt install apache2
     ```
 
-  - Install Composer and move it to the `/opt/lampp/bin` folder:
+2. To check the installation, you can use the following command:
+
     ```bash
-    sudo apt install curl
+    systemctl status apache2
+    ```
+   
+3. To set up Apache to start on boot, you can use the following command:
+
+    ```bash
+    sudo systemctl enable apache2
     ```
 
-  - Delete the installer:
+### B. Installation of PHP and Extensions
+
+1. To install PHP, you can use the following commands:
+
     ```bash
-    php -r "unlink('composer-setup.php');"
+    sudo add-apt-repository ppa:ondrej/php
+    sudo apt update
+    sudo apt install php8.1
     ```
 
-  - Check the installation:
+2. To install the necessary extensions, you can use the following command:
     ```bash
-    php composer -V
+    sudo apt install php8.1-intl php8.1-mbstring php8.1-curl php8.1-xml php8.1-mysql 
     ```
 
-  - Download the installer:
+3. To check the installation, you can use the following command:
 
     ```bash
+    php -v
+    ```
+
+### C. Installation of Composer
+  
+1. Update linux packages and download composer installer
+
+    ```bash
+    sudo apt update
     php -r "copy('https://getcomposer.org/installer','composer-setup.php');"
     ```
+   
+2. Install Composer and move it to the `/usr/bin` directory:
 
-  - Install Composer and move it to the `/opt/lampp/bin` folder:
     ```bash
-    php composer-setup.php --install-dir=/opt/lampp/bin --filename=composer
+    sudo php composer-setup.php --install-dir=/usr/bin --filename=composer
     ```
 
-  - Delete the installer:
+3. Delete the installer:
+  
     ```bash
     php -r "unlink('composer-setup.php');"
     ```
 
-  - Check the installation:
+4. Check the installation:
+  
     ```bash
     php composer -V
     ```
+   
+### D. Installation and excution of MySQL Server
 
-## C. Creation of the Database
+1. To install MySQL, you can use the following commands:
 
-- You can access to MySQL Server with PHPMyAdmin or any other client. Also, can be accessed from command line, 
-  with the following command:
+    ```bash
+    sudo apt update
+    sudo apt install mysql-server
+    sudo apt install mysql-client
+    ```
 
-  ```bash
-  mysql -h localhost -u root
-  ```
-  
+2. MySQL service status check:
 
-- DB creation and user assignment:
+    ```bash
+    sudo systemctl status mysql
+    ```
 
-  Once inside the MySQL server, the database must be created with the following command:
+    If its status is not active (running), you can start it with the following command:
+    ```bash
+    sudo systemctl start mysql`
+    ```
+3. Secure MySQL Server (optional):
 
-  ```
-  CREATE DATABASE reNews;
-  ```
-  The user to be used for the connection must be created with the following command:
+    The following command helps to configure security parameters to the MySQL server:
 
-  ```
-  CREATE USER admin@localhost IDENTIFIED BY "admin";
-  ```
-  
-  And grant all privileges to the user with the following command:
-  ```
-  GRANT ALL PRIVILEGES ON reNews.* TO admin@localhost WITH GRANT OPTION;
-  ```
+    ```bash
+    sudo mysql_secure_installation
+    ```
 
-- Creation of the tables:
+    With this, it is possible to do the following:
+    + Set a password for the root account.
+    + Remove anonymous access.
+    + Remove the test database.
+
+4. Login to MySQL as root:
+
+    ```bash
+    sudo mysql -u root
+    ```
+
+### E. Database creation and user assignment:
+
+1. Once inside the MySQL server, the database must be created with the following command:
+
+    ```
+    CREATE DATABASE reNews;
+    ```
+    The user to be used for the connection must be created with the following command:
+    
+    ```
+    CREATE USER admin@localhost IDENTIFIED BY "admin";
+    ```
+
+    If you have problems with the password policy, you can change it with the following command:
+    ```
+    SET GLOBAL  validate_password.policy = "LOW";
+    ```
+2. Grant all privileges to the user with the following command:
+
+    ```
+    GRANT ALL PRIVILEGES ON reNews.* TO admin@localhost WITH GRANT OPTION;
+    ```
+
+3. Creation of the tables:
 
   - Users table:
-  ```
-  CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    nickname VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    is_admin BOOLEAN DEFAULT FALSE
-  );
-  ```
+    ```
+    CREATE TABLE users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      email VARCHAR(255) NOT NULL,
+      nickname VARCHAR(255) NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      is_admin BOOLEAN DEFAULT FALSE
+    );
+    ```
 
-## D. Downloading the project from GitHub
+# 3. Downloading the project from GitHub
 
-- To download the project it is necessary to have Git installed. Then, it is enough to enter the terminal and 
+To download the project it is necessary to have Git installed. Then, it is enough to enter the terminal and 
   enter the followings commands:
 
   ```bash
-  cd /opt/lampp/htdocs
   git clone https://github.com/ignfer/ReNews.git
   ```
+    
+  It doesn't matter where the project is downloaded, as long as it is in a directory that is easy to access.
 
 - - -
-# 3. Compilation and execution of the project
-## A. Compilation
+# 4. Proyect execution on local server
 
-## B. Execution
+Once the project is downloaded, it is necessary to execute the frontend and backend separately.
+To do this, it is necessary to follow the following steps:
 
-### Frontend:
 
-1. `cd Frontend`
-2. `npm install`
-3. `npm run dev`
+Move to the project directory:
+
+```bash
+cd ReNews
+```
+It is recommended to open two terminals, one for the frontend and one for the backend.
+After that, you must follow the following steps for each part of the project:
 
 ### Backend:
 
 1. `cd Backend`
-2. `mv envExample .env`
-3. `php spark serve`
+2. `cp envExample .env`
+3. `composer install`
+4. `php spark serve`
+<!-- 
+4. `php spark migrate`
+5. `php spark db:seed ..seeders`
+-->
+
+### Frontend:
+
+1. `cd Frontend`
+2. `npm install` or `npm i`
+3. `npm run dev`
+
+
