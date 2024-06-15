@@ -86,6 +86,27 @@ The main objective of this activity is to create an SPA application...
   On the project's root folder, composer is already installed. But, if you want to install it globally, you must 
   run the following commands:
 
+  - Update linux packages:
+
+    ```bash
+    sudo apt update
+    ```
+
+  - Install Composer and move it to the `/opt/lampp/bin` folder:
+    ```bash
+    sudo apt install curl
+    ```
+
+  - Delete the installer:
+    ```bash
+    php -r "unlink('composer-setup.php');"
+    ```
+
+  - Check the installation:
+    ```bash
+    php composer -V
+    ```
+
   - Download the installer:
 
     ```bash
