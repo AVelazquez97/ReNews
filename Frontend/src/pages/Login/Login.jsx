@@ -1,13 +1,15 @@
 import {LOGIN_DATA_INITIAL_STATE, SPA_PATH} from "../../const.js";
 import Container from "../../components/Container/Container.jsx";
+import ForgotPasswordModal from "../../components/Modals/ForgotPasswordModal.jsx";
 import {useState} from "react";
 
 export default function Login({setSpaPath}){
     const [view, setView] = useState("login");
     const [loginData, setLoginData] = useState(LOGIN_DATA_INITIAL_STATE);
+    const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
 
-    function handleLogin(){
-        console.log("login...");
+    function handleLogin(debugLoginType){
+        sessionStorage.setItem("isAdmin",debugLoginType);
         setSpaPath(SPA_PATH.HOME);
     }
 
@@ -33,8 +35,17 @@ export default function Login({setSpaPath}){
         }
     }
 
+    function handleOpenForgotPasswordModal(){
+        setIsForgotPasswordModalOpen(true);
+    }
+
+    function handleCloseForgotPasswordModal(){
+        setIsForgotPasswordModalOpen(false);
+    }
+
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
+        {isForgotPasswordModalOpen && <ForgotPasswordModal onClose={handleCloseForgotPasswordModal} isOpen={isForgotPasswordModalOpen}/>}
             <Container>
                 <p className={"fs-3 fw-bold"}>{view === "login" ? "Login" : "Registrarse"}</p>
                 <form className={"text-start"}>
@@ -79,15 +90,25 @@ export default function Login({setSpaPath}){
                         </>
                     }
                 </form>
-                <div className={"d-flex justify-content-end gap-2"}>
+                <div className={"w-100 d-flex justify-content-end gap-2"}>
                     {view === "login" ?
                         <>
-                            <button className="btn btn-primary fw-bold" onClick={() => setView("register")}>Registrarse</button>
-                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin()}>Iniciar sesión</button>
+                            <button className="btn btn-primary fw-bold"
+                                    onClick={() => setView("register")}>Registrarse
+                            </button>
+                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(true)}>Iniciar sesión como
+                                admin
+                            </button>
+                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(false)}>Iniciar sesión normal
+                            </button>
                         </>
                         :
                         <button className="btn btn-primary fw-bold" onClick={() => handleRegister()}>Enviar</button>
-                }
+                    }
+
+                </div>
+                <div className={"w-100 p-2"}>
+                    <a href={"#"} onClick={() => handleOpenForgotPasswordModal()}>Olvidé mi contraseña</a>
                 </div>
             </Container>
         </div>

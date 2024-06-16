@@ -1,5 +1,6 @@
 import react from 'react';
 import {SPA_PATH} from '../../const.js'
+import {isAdmin} from "../../utils.js";
 export default function Header({spaPath, setSpaPath}){
 
     function setRoute(path){
@@ -16,7 +17,7 @@ export default function Header({spaPath, setSpaPath}){
                             <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.HOME)}>Inicio</btn>
                             <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.FEED)}>Feed</btn>
                             <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.PROFILE)}>Perfil</btn>
-                            <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.PENDING)}>Pendientes</btn>
+                            { isAdmin() && <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.PENDING)}>Pendientes</btn>}
                             <img width={25} height={25} alt={"avatar"} src={"./default-profile-picture.jpg"}
                                  className={"rounded-circle m-2"}/>
                         </>

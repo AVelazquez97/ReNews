@@ -2,8 +2,9 @@ import Modal from "react-bootstrap/Modal";
 import {Button} from "react-bootstrap";
 import Container from "../Container/Container.jsx";
 import CommentCard from "../CommentCard/CommentCard.jsx";
+import {isAdmin} from "../../utils.js";
 export default function PostModal({post,onClose}){
-    const { owner_id, id, title, body, date, tags, likes, comments } = post;
+    const { ownerId, id, title, body, date, tags, likes, comments } = post;
 
     const dateObj = new Date(date);
     const formattedDate = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
@@ -14,13 +15,13 @@ export default function PostModal({post,onClose}){
                 <Modal.Title className={"fw-bold d-flex flex-row justify-content-between align-items-center w-100"}>
                     {`Leyendo post #${id}`}
                     <div className={"d-flex gap-2"}>
-                        <Button className={"btn btn-primary fw-bold p-1"} onClick={onClose}>Favorito</Button>
-                        <Button className={"btn btn-danger fw-bold p-1"} onClick={onClose}>Eliminar Post</Button>
+                        <Button className={"btn btn-primary fw-bold p-1"} onClick={onClose}>Marcar como favorito</Button>
+                        {isAdmin() && <Button className={"btn btn-danger fw-bold p-1"} onClick={onClose}>Eliminar Post</Button>}
                     </div>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className={"d-flex flex-column justify-content-center align-items-center"}>
-                <h4 className={"fw-semibold"}> {owner_id} - {title} - {formattedDate}</h4>
+                <h4 className={"fw-semibold"}> {ownerId} - {title} - {formattedDate}</h4>
                 <div className={"d-flex w-100 align-items-start mb-2"}>
                     {post?.tags?.map(tag => (
                         <span key={tag.id} className="badge rounded-pill text-bg-success me-1">{tag.name}</span>

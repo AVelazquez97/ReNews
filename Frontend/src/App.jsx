@@ -17,7 +17,7 @@ function App() {
               {spaPath === SPA_PATH.LOGIN && <Login setSpaPath={setSpaPath}/>}
               {spaPath === SPA_PATH.HOME && <Home />}
               {spaPath === SPA_PATH.FEED && <Feed />}
-              {spaPath === SPA_PATH.PROFILE && <Profile />}
+              {spaPath === SPA_PATH.PROFILE && <Profile setSpaPath={setSpaPath}/>}
               {spaPath === SPA_PATH.PENDING && <Pending />}
       </div>
   )
