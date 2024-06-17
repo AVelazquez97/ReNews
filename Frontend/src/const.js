@@ -52,3 +52,10 @@ export const PROFILE_DATA_INITIAL_STATE = {
     username: "",
     profile_image: "",
 }
+
+export const VALIDATION_REGISTER_FORM_INITIAL_STATE = {
+    email: {message: null},
+    password: {message: null},
+    password_repeat: {message: null},
+    username: {message: null},
+}
