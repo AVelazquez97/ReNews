@@ -347,3 +347,59 @@ export const FEED_GET_TAGS_PLACEHOLDER_RESPONSE = {
         }
     ]
 }
+
+export const PROFILE_GET_USER_PLACEHOLDER_RESPONSE =
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "john_doe",
+            "email": "john.doe@example.com",
+            "name": "John",
+            "surname": "Doe",
+            "postsAmount": 5,
+            "commentsAmount": 10,
+            "likesAmount": 50
+        },
+        {
+            "id": 2,
+            "username": "jane_smith",
+            "email": "jane.smith@example.com",
+            "name": "Jane",
+            "surname": "Smith",
+            "postsAmount": 5,
+            "commentsAmount": 10,
+            "likesAmount": 50
+        },
+        {
+            "id": 3,
+            "username": "michael_jones",
+            "email": "michael.jones@example.com",
+            "name": "Michael",
+            "surname": "Jones",
+            "postsAmount": 5,
+            "commentsAmount": 10,
+            "likesAmount": 50
+        },
+        {
+            "id": 4,
+            "username": "emma_brown",
+            "email": "emma.brown@example.com",
+            "name": "Emma",
+            "surname": "Brown",
+            "postsAmount": 5,
+            "commentsAmount": 10,
+            "likesAmount": 50
+        },
+        {
+            "id": 5,
+            "username": "william_taylor",
+            "email": "william.taylor@example.com",
+            "name": "William",
+            "surname": "Taylor",
+            "postsAmount": 5,
+            "commentsAmount": 10,
+            "likesAmount": 50
+        }
+    ]
+}

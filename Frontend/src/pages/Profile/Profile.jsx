@@ -3,12 +3,17 @@ import {useEffect, useState} from "react";
 import Container from "../../components/Container/Container.jsx";
 import {isAdmin} from "../../utils.js";
 import PostCard from "../../components/PostCard/PostCard.jsx";
-import {FEED_GET_POSTS_PLACEHOLDER_RESPONSE} from "../../placeholderResponses.js";
+import {
+    FEED_GET_POSTS_PLACEHOLDER_RESPONSE,
+    PROFILE_GET_USER_PLACEHOLDER_RESPONSE
+} from "../../placeholderResponses.js";
+import UserCard from "../../components/Card/UserCard.jsx";
 
 export default function Profile({setSpaPath}){
     const [profileData, setProfileData] = useState(PROFILE_DATA_INITIAL_STATE);
     const [tagName, setTagName] = useState("");
     const [ownedPosts, setOwnedPosts] = useState([]);
+    const [users, setUsers] = useState([]);
 
     function updateProfileData(value, key){
         setProfileData({...profileData, [key]: value});
@@ -34,6 +39,11 @@ export default function Profile({setSpaPath}){
     useEffect(() => {
         //postsController.getOwnedPost(userId);
         setOwnedPosts(JSON.parse(JSON.stringify(FEED_GET_POSTS_PLACEHOLDER_RESPONSE.posts)));
+    }, []);
+
+    useEffect(() => {
+        //usersController.getUsers();
+        setUsers(JSON.parse(JSON.stringify(PROFILE_GET_USER_PLACEHOLDER_RESPONSE.users)));
     }, []);
 
     return (
@@ -63,6 +73,9 @@ export default function Profile({setSpaPath}){
                                    onChange={e => updateProfileData(e.target.value, "username")}/>
                         </div>
                     </form>
+                    <div className={"d-flex justify-content-end w-100"}>
+                        <button className="btn btn-dark fw-bold">Guardar</button>
+                    </div>
                 </Container>
                 {isAdmin() &&
                     <Container width={"25"}>
@@ -95,6 +108,15 @@ export default function Profile({setSpaPath}){
                         )
                     })}
                 </Container>
+                {isAdmin() &&
+                    <Container justifyContent={"start"} gap={"2"} width={"100"}>
+                        {users.map(user => {
+                            return (
+                                <UserCard key={user.id} user={user}/>
+                            )
+                        })}
+                    </Container>
+                }
             </div>
         </div>
     )
