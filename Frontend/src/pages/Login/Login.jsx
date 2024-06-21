@@ -10,6 +10,7 @@ export default function Login({setSpaPath}){
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
     const [validations,setValidations] = useState(VALIDATION_REGISTER_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState({visible: false, isError: false, message: ""});
+    const [apiResponse, setApiResponse] = useState(null);
 
     function handleLogin(debugLoginType){
         sessionStorage.setItem("isAdmin",debugLoginType);
@@ -60,6 +61,12 @@ export default function Login({setSpaPath}){
         setIsForgotPasswordModalOpen(false);
     }
 
+    function testConsume(){
+        fetch("https://pokeapi.co/api/v2/pokemon/ditto")
+        .then(response => response.json())
+        .then(data => setApiResponse(JSON.stringify(data.species)))
+    }
+
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
         {isForgotPasswordModalOpen && <ForgotPasswordModal onClose={handleCloseForgotPasswordModal} isOpen={isForgotPasswordModalOpen}/>}
@@ -71,6 +78,11 @@ export default function Login({setSpaPath}){
                     </div>
                 }
                 <form className={"text-start"}>
+                    {apiResponse &&
+                        <div>
+                            {apiResponse}
+                        </div>
+                    }
                     <div className="mb-3">
                         <label className="form-label">Dirección de correo</label>
                         <input type="email" className="form-control" value={loginData.email}
@@ -139,13 +151,16 @@ export default function Login({setSpaPath}){
                 <div className={"w-100 d-flex justify-content-center gap-2"}>
                     {view === "login" ?
                         <>
+                            <button className="btn btn-danger fw-bold" onClick={() => testConsume()}>Hacer la consumición</button>
                             <button className="btn btn-primary fw-bold"
                                     onClick={() => setView("register")}>Registrarse
                             </button>
-                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(true)}>Iniciar sesión como
+                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(true)}>Iniciar sesión
+                                como
                                 admin
                             </button>
-                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(false)}>Iniciar sesión normal
+                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(false)}>Iniciar sesión
+                                normal
                             </button>
                         </>
                         :
