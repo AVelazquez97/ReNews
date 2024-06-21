@@ -40,7 +40,7 @@ export function validatePostTitle(title) {
 }
 
 export function validatePostBody(body) {
-    return body.length >= 3;
+    return body.length >= 100;
 }
 
 export function validatePostTags(tags) {
@@ -49,6 +49,10 @@ export function validatePostTags(tags) {
 
 export function validatePostTagsLength(tags) {
     return tags.length <= 5;
+}
+
+export function validateSearch(search) {
+    return search.length > 0;
 }
 
 export function validateRegisterForm(data, setValidations) {
@@ -74,5 +78,39 @@ export function validateRegisterForm(data, setValidations) {
         setValidations(prevState => ({...prevState, username: {message: "El nombre de usuario debe tener al menos 3 caracteres de largo."}}));
     } else {
         setValidations(prevState => ({...prevState, username: {message: ""}}));
+    }
+}
+
+export function validateFeedSearch(search, setValidations) {
+    if (!validateSearch(search)) {
+        setValidations(prevState => ({...prevState, search: {message: "La búsqueda debe tener al menos 1 caracter de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, search: {message: ""}}));
+    }
+}
+
+export function validateNewPostForm(postData, selectedTags, setValidations) {
+    if (!validatePostTitle(postData.title)) {
+        setValidations(prevState => ({...prevState, title: {message: "El título del post debe tener al menos 3 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, title: {message: ""}}));
+    }
+
+    if (!validatePostBody(postData.body)) {
+        setValidations(prevState => ({...prevState, body: {message: "El cuerpo del post debe tener al menos 100 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, body: {message: ""}}));
+    }
+
+    if (!validatePostTags(selectedTags)) {
+        setValidations(prevState => ({...prevState, minimumTagLimit: {message: "El post debe tener al menos 1 tag."}}));
+    } else {
+        setValidations(prevState => ({...prevState, minimumTagLimit: {message: ""}}));
+    }
+
+    if (!validatePostTagsLength(selectedTags)) {
+        setValidations(prevState => ({...prevState, maximumTagLimit: {message: "El post no puede tener más de 5 tags."}}));
+    } else {
+        setValidations(prevState => ({...prevState, maximumTagLimit: {message: ""}}));
     }
 }

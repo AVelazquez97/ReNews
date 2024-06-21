@@ -3,11 +3,21 @@ import {Button} from "react-bootstrap";
 import Container from "../Container/Container.jsx";
 import CommentCard from "../CommentCard/CommentCard.jsx";
 import {isAdmin} from "../../utils.js";
+import {useState} from "react";
 export default function PostModal({post,onClose}){
-    const { ownerId, id, title, body, date, tags, likes, comments } = post;
+    const { ownerId, id, title, body, date, tags, comments } = post;
+
+    const [likes, setLikes] = useState(post?.likes);
+    const [alreadyLiked, setAlreadyLiked] = useState(false);
 
     const dateObj = new Date(date);
     const formattedDate = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
+
+
+    function handleLike(){
+        alreadyLiked ? setLikes(likes - 1) : setLikes(likes + 1);
+        setAlreadyLiked(!alreadyLiked);
+    }
 
     return (
         <Modal show onHide={onClose}>
@@ -15,7 +25,6 @@ export default function PostModal({post,onClose}){
                 <Modal.Title className={"fw-bold d-flex flex-row justify-content-between align-items-center w-100"}>
                     {`Leyendo post #${id}`}
                     <div className={"d-flex gap-2"}>
-                        <Button className={"btn btn-primary fw-bold p-1"} onClick={onClose}>Marcar como favorito</Button>
                         {isAdmin() && <Button className={"btn btn-danger fw-bold p-1"} onClick={onClose}>Eliminar Post</Button>}
                     </div>
                 </Modal.Title>
@@ -27,7 +36,9 @@ export default function PostModal({post,onClose}){
                         <span key={tag.id} className="badge rounded-pill text-bg-success me-1">{tag.name}</span>
                     ))}
                 </div>
-                <p className={"fs-5 fw-bold text-success w-100 text-start"}>👍 {likes}</p>
+                <div className={"w-100 text-start mb-1 mt-1"}>
+                    <Button className={`btn fw-bold p-1 ${alreadyLiked ? "btn-primary" : "btn-dark"}`} onClick={() => handleLike()}>{likes} Me gusta 👍</Button>
+                </div>
                 <p>{body}</p>
                 <h5 className={"fw-semibold"}>💬 Comentarios</h5>
                 <Container width={"100"} height={"100"} justifyContent={"start"} gap={"2"}>

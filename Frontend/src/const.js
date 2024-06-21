@@ -61,3 +61,14 @@ export const VALIDATION_REGISTER_FORM_INITIAL_STATE = {
     password_repeat: {message: null},
     username: {message: null},
 }
+
+export const VALIDATION_FEED_FORM_INITIAL_STATE = {
+    search: {message: null},
+}
+
+export const VALIDATION_NEW_POST_FORM_INITIAL_STATE = {
+    title: {message: null},
+    body: {message: null},
+    minimumTagLimit: {message: null},
+    maximumTagLimit: {message: null},
+}
