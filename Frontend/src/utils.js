@@ -18,6 +18,10 @@ export function userId(){
     return sessionStorage.getItem("userId");
 }
 
+export function userName(){
+    return sessionStorage.getItem("username");
+}
+
 export function validateEmail(email) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
@@ -112,5 +116,13 @@ export function validateNewPostForm(postData, selectedTags, setValidations) {
         setValidations(prevState => ({...prevState, maximumTagLimit: {message: "El post no puede tener más de 5 tags."}}));
     } else {
         setValidations(prevState => ({...prevState, maximumTagLimit: {message: ""}}));
+    }
+}
+
+export function validateNewCommentForm(commentData, setValidations) {
+    if (!notNullNotEmptyString(commentData.body)) {
+        setValidations(prevState => ({...prevState, body: {message: "El comentario no puede estar vacío."}}));
+    } else {
+        setValidations(prevState => ({...prevState, body: {message: ""}}));
     }
 }

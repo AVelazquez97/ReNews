@@ -14,6 +14,8 @@ export default function Login({setSpaPath}){
 
     function handleLogin(debugLoginType){
         sessionStorage.setItem("isAdmin",debugLoginType);
+        sessionStorage.setItem("userId", "1");
+        sessionStorage.setItem("username", "testUserName");
         setSpaPath(SPA_PATH.HOME);
     }
 

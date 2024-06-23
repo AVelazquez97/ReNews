@@ -46,13 +46,21 @@ export const LOGIN_DATA_INITIAL_STATE = {
     profile_image: "",
 }
 
-export const POST_DATA_INITIAL_STATE = { title: "", body: "", tags: [] }
+export const POST_DATA_INITIAL_STATE = { ownerId: "", username: "", title: "", body: "", tags: []}
+
+export const COMMENT_DATA_INITIAL_STATE = { postId: "", ownerId: "", body: "" }
 
 export const PROFILE_DATA_INITIAL_STATE = {
     name: "",
     surname: "",
     username: "",
     profile_image: "",
+}
+
+export const ALERT_INITIAL_STATE = {
+    visible: false,
+    isError: false,
+    message: "",
 }
 
 export const VALIDATION_REGISTER_FORM_INITIAL_STATE = {
@@ -71,4 +79,8 @@ export const VALIDATION_NEW_POST_FORM_INITIAL_STATE = {
     body: {message: null},
     minimumTagLimit: {message: null},
     maximumTagLimit: {message: null},
+}
+
+export const VALIDATION_NEW_COMMENT_FORM_INITIAL_STATE = {
+    body: {message: null},
 }

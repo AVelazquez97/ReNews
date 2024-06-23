@@ -3,19 +3,16 @@ import {Button} from "react-bootstrap";
 import {FEED_GET_TAGS_PLACEHOLDER_RESPONSE} from "../../placeholderResponses.js";
 import {useEffect, useState} from "react";
 import {
+    ALERT_INITIAL_STATE,
     POST_DATA_INITIAL_STATE,
     VALIDATION_NEW_POST_FORM_INITIAL_STATE
 } from "../../const.js";
-import {notNullNotEmptyString, validateNewPostForm} from "../../utils.js";
+import {notNullNotEmptyString, userId, userName, validateNewPostForm} from "../../utils.js";
 export default function NewPostModal({onClose}){
     const [postData, setPostData] = useState(POST_DATA_INITIAL_STATE);
     const [selectedTags, setSelectedTags] = useState([]);
     const [validations,setValidations] = useState(VALIDATION_NEW_POST_FORM_INITIAL_STATE);
-    const [alert,setAlert] = useState({visible: false, isError: false, message: ""});
-
-    useEffect(() => {
-        console.log("[PLACEHOLDER] Selected tags: ", selectedTags)
-    }, [selectedTags]);
+    const [alert,setAlert] = useState({ALERT_INITIAL_STATE});
 
     useEffect(() => {
         if(validations?.title?.message !== "" ||
@@ -45,6 +42,12 @@ export default function NewPostModal({onClose}){
     }
 
     function handleNewPost(){
+        setPostData((prevState) => ({
+            ...prevState,
+            ownerId: userId(),
+            username: userName(),
+            tags: selectedTags
+        }));
         validateNewPostForm(postData, selectedTags, setValidations);
     }
 
@@ -62,7 +65,7 @@ export default function NewPostModal({onClose}){
                 <form className={"text-start w-100"}>
                     <div className="mb-3">
                         <label className="form-label">Título</label>
-                        <input type="email" className="form-control" value={postData?.title}
+                        <input type="text" className="form-control" value={postData?.title}
                                onChange={e => updatePostData(e.target.value, "title")}/>
                         {
                             notNullNotEmptyString(validations?.title?.message) &&

@@ -76,3 +76,7 @@ button:focus-visible {
 .modal {
   background-color: rgba(0, 0, 0, 0.5) !important;
 }
+
+.modal-dialog{
+  max-width: 850px !important;
+}
