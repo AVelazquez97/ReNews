@@ -5,7 +5,9 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
 $routes->get('/', 'Home::index');
+$routes->get('/docs', 'Docs::index');
 
 $routes->group('api', ['namespace' => 'App\Controllers'], function($routes) {
     $routes->resource('users', ['controller' => 'Users']);
