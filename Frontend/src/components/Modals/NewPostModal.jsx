@@ -7,7 +7,7 @@ import {
     POST_DATA_INITIAL_STATE,
     VALIDATION_NEW_POST_FORM_INITIAL_STATE
 } from "../../const.js";
-import {notNullNotEmptyString, userId, userName, validateNewPostForm} from "../../utils.js";
+import {notNullNotEmptyString, now, userId, userName, validateNewPostForm} from "../../utils.js";
 export default function NewPostModal({onClose}){
     const [postData, setPostData] = useState(POST_DATA_INITIAL_STATE);
     const [selectedTags, setSelectedTags] = useState([]);
@@ -46,7 +46,8 @@ export default function NewPostModal({onClose}){
             ...prevState,
             ownerId: userId(),
             username: userName(),
-            tags: selectedTags
+            tags: selectedTags,
+            date: now()
         }));
         validateNewPostForm(postData, selectedTags, setValidations);
     }

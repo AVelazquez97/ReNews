@@ -22,6 +22,10 @@ export function userName(){
     return sessionStorage.getItem("username");
 }
 
+export function now(){
+    return new Date().toISOString().split('.')[0] + 'Z';
+}
+
 export function validateEmail(email) {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);

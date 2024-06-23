@@ -46,9 +46,9 @@ export const LOGIN_DATA_INITIAL_STATE = {
     profile_image: "",
 }
 
-export const POST_DATA_INITIAL_STATE = { ownerId: "", username: "", title: "", body: "", tags: []}
+export const POST_DATA_INITIAL_STATE = { ownerId: "", username: "", title: "", body: "", tags: [], date: ""}
 
-export const COMMENT_DATA_INITIAL_STATE = { postId: "", ownerId: "", body: "" }
+export const COMMENT_DATA_INITIAL_STATE = { postId: "", ownerId: "", body: "", date: "" }
 
 export const PROFILE_DATA_INITIAL_STATE = {
     name: "",

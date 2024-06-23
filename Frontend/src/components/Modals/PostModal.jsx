@@ -2,7 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import {Button} from "react-bootstrap";
 import Container from "../Container/Container.jsx";
 import CommentCard from "../CommentCard/CommentCard.jsx";
-import {isAdmin, notNullNotEmptyString, userId, validateNewCommentForm} from "../../utils.js";
+import {isAdmin, notNullNotEmptyString, now, userId, validateNewCommentForm} from "../../utils.js";
 import {useEffect, useState} from "react";
 import {ALERT_INITIAL_STATE, COMMENT_DATA_INITIAL_STATE, VALIDATION_NEW_POST_FORM_INITIAL_STATE} from "../../const.js";
 export default function PostModal({post,onClose}){
@@ -43,7 +43,8 @@ export default function PostModal({post,onClose}){
         setNewComment((prevState) => ({
             ...prevState,
             ownerId: userId(),
-            postId: id
+            postId: id,
+            date: now()
         }));
         validateNewCommentForm(newComment, setValidations);
     }
@@ -79,7 +80,7 @@ export default function PostModal({post,onClose}){
                         const formattedCommentDate = `${commentDate.getDate()}/${commentDate.getMonth() + 1}/${commentDate.getFullYear()}`;
                         return (
                             <CommentCard key={comment.ownerId} owner={comment.ownerId}
-                                         commentary={comment.comment} date={formattedCommentDate}/>
+                                         body={comment.body} date={formattedCommentDate}/>
                         );
                     })}
                 </Container>

@@ -22,12 +22,12 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
             {
                 "ownerId": "user456",
                 "date": "2024-06-10T09:00:00Z",
-                "comment": "Increíble lo que se está logrando con la IA, especialmente en el campo de la salud."
+                "body": "Increíble lo que se está logrando con la IA, especialmente en el campo de la salud."
             },
             {
                 "ownerId": "user789",
                 "date": "2024-06-10T10:00:00Z",
-                "comment": "Esperemos que estos avances sean usados para el bien común."
+                "body": "Esperemos que estos avances sean usados para el bien común."
             }
         ]
     },
@@ -48,12 +48,12 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
             {
                 "ownerId": "user457",
                 "date": "2024-06-09T13:00:00Z",
-                "comment": "La seguridad digital es más importante que nunca, hay que mantenerse alerta."
+                "body": "La seguridad digital es más importante que nunca, hay que mantenerse alerta."
             },
             {
                 "ownerId": "user790",
                 "date": "2024-06-09T14:00:00Z",
-                "comment": "Es esencial invertir en buenas prácticas de ciberseguridad."
+                "body": "Es esencial invertir en buenas prácticas de ciberseguridad."
             }
         ]
     },
@@ -74,12 +74,12 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
             {
                 "ownerId": "user458",
                 "date": "2024-06-08T16:00:00Z",
-                "comment": "La computación cuántica promete revolucionar múltiples industrias."
+                "body": "La computación cuántica promete revolucionar múltiples industrias."
             },
             {
                 "ownerId": "user791",
                 "date": "2024-06-08T17:00:00Z",
-                "comment": "Es emocionante ver cómo se democratiza esta tecnología."
+                "body": "Es emocionante ver cómo se democratiza esta tecnología."
             }
         ]
     },
@@ -104,12 +104,12 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
             {
                 "ownerId": "user459",
                 "date": "2024-06-07T12:00:00Z",
-                "comment": "Las regulaciones son cruciales para un desarrollo tecnológico responsable."
+                "body": "Las regulaciones son cruciales para un desarrollo tecnológico responsable."
             },
             {
                 "ownerId": "user792",
                 "date": "2024-06-07T13:00:00Z",
-                "comment": "Es un buen paso hacia la protección de los datos personales."
+                "body": "Es un buen paso hacia la protección de los datos personales."
             }
         ]
     },
@@ -134,12 +134,12 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
             {
                 "ownerId": "user460",
                 "date": "2024-06-06T15:00:00Z",
-                "comment": "La 5G está cambiando la forma en que nos conectamos y comunicamos."
+                "body": "La 5G está cambiando la forma en que nos conectamos y comunicamos."
             },
             {
                 "ownerId": "user793",
                 "date": "2024-06-06T16:00:00Z",
-                "comment": "Espero que esta expansión llegue pronto a mi ciudad."
+                "body": "Espero que esta expansión llegue pronto a mi ciudad."
             }
         ]
     },
@@ -164,12 +164,12 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
                 {
                     "ownerId": "user460",
                     "date": "2024-06-06T15:00:00Z",
-                    "comment": "La 5G está cambiando la forma en que nos conectamos y comunicamos."
+                    "body": "La 5G está cambiando la forma en que nos conectamos y comunicamos."
                 },
                 {
                     "ownerId": "user793",
                     "date": "2024-06-06T16:00:00Z",
-                    "comment": "Espero que esta expansión llegue pronto a mi ciudad."
+                    "body": "Espero que esta expansión llegue pronto a mi ciudad."
                 }
             ]
         }
@@ -199,12 +199,12 @@ export const HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE = {
                 {
                     "ownerId": "user456",
                     "date": "2024-06-10T09:00:00Z",
-                    "comment": "Increíble lo que se está logrando con la IA, especialmente en el campo de la salud."
+                    "body": "Increíble lo que se está logrando con la IA, especialmente en el campo de la salud."
                 },
                 {
                     "ownerId": "user789",
                     "date": "2024-06-10T10:00:00Z",
-                    "comment": "Esperemos que estos avances sean usados para el bien común."
+                    "body": "Esperemos que estos avances sean usados para el bien común."
                 }
             ]
         },
@@ -225,12 +225,12 @@ export const HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE = {
                 {
                     "ownerId": "user457",
                     "date": "2024-06-09T13:00:00Z",
-                    "comment": "La seguridad digital es más importante que nunca, hay que mantenerse alerta."
+                    "body": "La seguridad digital es más importante que nunca, hay que mantenerse alerta."
                 },
                 {
                     "ownerId": "user790",
                     "date": "2024-06-09T14:00:00Z",
-                    "comment": "Es esencial invertir en buenas prácticas de ciberseguridad."
+                    "body": "Es esencial invertir en buenas prácticas de ciberseguridad."
                 }
             ]
         },
@@ -251,12 +251,12 @@ export const HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE = {
                 {
                     "ownerId": "user458",
                     "date": "2024-06-08T16:00:00Z",
-                    "comment": "La computación cuántica promete revolucionar múltiples industrias."
+                    "body": "La computación cuántica promete revolucionar múltiples industrias."
                 },
                 {
                     "ownerId": "user791",
                     "date": "2024-06-08T17:00:00Z",
-                    "comment": "Es emocionante ver cómo se democratiza esta tecnología."
+                    "body": "Es emocionante ver cómo se democratiza esta tecnología."
                 }
             ]
         }
