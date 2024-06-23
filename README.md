@@ -24,7 +24,7 @@ A simple Tech news blog, with a React frontend and a CodeIgniter backend.
 This is a university project for RIA and PHP. Subjects that are part of the curriculum of the
 [Technologist Degree in Computer Science, offered by UTEC](https://utec.edu.uy/en/education/undergraduate-study/technologist-degree-in-computer-science/).
 
-The main objective of this activity is to create an SPA application...
+<!-- The main objective of this activity is to create an SPA application... -->
 
 - - -
 # 1. Stack
