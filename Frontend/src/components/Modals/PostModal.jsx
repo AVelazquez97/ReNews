@@ -4,7 +4,12 @@ import Container from "../Container/Container.jsx";
 import CommentCard from "../CommentCard/CommentCard.jsx";
 import {isAdmin, notNullNotEmptyString, now, userId, validateNewCommentForm} from "../../utils.js";
 import {useEffect, useState} from "react";
-import {ALERT_INITIAL_STATE, COMMENT_DATA_INITIAL_STATE, VALIDATION_NEW_POST_FORM_INITIAL_STATE} from "../../const.js";
+import {
+    ALERT_INITIAL_STATE,
+    COMMENT_DATA_INITIAL_STATE,
+    VALIDATION_NEW_COMMENT_FORM_INITIAL_STATE,
+    VALIDATION_NEW_POST_FORM_INITIAL_STATE
+} from "../../const.js";
 export default function PostModal({post,onClose}){
     const { ownerId, id, title, body, date, tags, comments } = post;
 
@@ -16,12 +21,13 @@ export default function PostModal({post,onClose}){
     const dateObj = new Date(date);
     const formattedDate = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
 
-    const [validations,setValidations] = useState(VALIDATION_NEW_POST_FORM_INITIAL_STATE);
+    const [validations,setValidations] = useState(VALIDATION_NEW_COMMENT_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState({ALERT_INITIAL_STATE});
 
     useEffect(() => {
         if(validations?.body?.message !== ""){
             console.log("[PLACEHOLDER] Validation failed, please check the form for errors.");
+            setAlert(ALERT_INITIAL_STATE);
         } else {
             console.log("[PLACEHOLDER] Creating comment: ", newComment);
             //postController.createPost(postData);
@@ -86,7 +92,7 @@ export default function PostModal({post,onClose}){
                 </Container>
                 <Container width={"100"} height={"100"} justifyContent={"start"} gap={"2"}>
                     <h5 className={"fw-semibold"}>💬 Agrega un comentario</h5>
-                    {alert.visible &&
+                    {alert?.visible && alert?.isError === false &&
                         <div className={`alert mt-2 alert-${alert.isError ? "danger" : "success"}`}>
                             {alert.message}
                         </div>

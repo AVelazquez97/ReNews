@@ -130,3 +130,11 @@ export function validateNewCommentForm(commentData, setValidations) {
         setValidations(prevState => ({...prevState, body: {message: ""}}));
     }
 }
+
+export function validateNewTagForm(tagData, setValidations) {
+    if (!notNullNotEmptyString(tagData.name)) {
+        setValidations(prevState => ({...prevState, name: {message: "El tag no puede estar vacío."}}));
+    } else {
+        setValidations(prevState => ({...prevState, name: {message: ""}}));
+    }
+}

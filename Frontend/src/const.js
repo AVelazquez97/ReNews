@@ -50,6 +50,8 @@ export const POST_DATA_INITIAL_STATE = { ownerId: "", username: "", title: "", b
 
 export const COMMENT_DATA_INITIAL_STATE = { postId: "", ownerId: "", body: "", date: "" }
 
+export const TAG_DATA_INITIAL_STATE = { name: "" }
+
 export const PROFILE_DATA_INITIAL_STATE = {
     name: "",
     surname: "",
@@ -84,3 +86,8 @@ export const VALIDATION_NEW_POST_FORM_INITIAL_STATE = {
 export const VALIDATION_NEW_COMMENT_FORM_INITIAL_STATE = {
     body: {message: null},
 }
+
+export const VALIDATION_NEW_TAG_FORM_INITIAL_STATE = {
+    name: {message: null},
+}
+
