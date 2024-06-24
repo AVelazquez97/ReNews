@@ -16,7 +16,7 @@
     <div class="menu">
         <ul>
             <li class="logo">
-                <a href="https://renews.alexisvelazquez.tech" target="_blank">
+                <a href="<?= env('app.FrontendURL') ?>" target="_blank">
                     <img aria-label="Visit the frontend website!" src="/renews-logo.svg" alt="ReNews Logo"/>
                 </a>
             </li>
