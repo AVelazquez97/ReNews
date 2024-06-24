@@ -1,8 +1,8 @@
-import {LOGIN_DATA_INITIAL_STATE, SPA_PATH, VALIDATION_REGISTER_FORM_INITIAL_STATE} from "../../const.js";
+import {LOGIN_DATA_INITIAL_STATE, SPA_PATH, VALIDATION_REGISTER_FORM_INITIAL_STATE, API_URL} from "../../const.js";
 import Container from "../../components/Container/Container.jsx";
 import ForgotPasswordModal from "../../components/Modals/ForgotPasswordModal.jsx";
 import {useEffect, useState} from "react";
-import {notNull, notNullNotEmptyString, validateRegisterForm} from "../../utils.js";
+import {notNullNotEmptyString, validateRegisterForm} from "../../utils.js";
 
 export default function Login({setSpaPath}){
     const [view, setView] = useState("login");
@@ -64,9 +64,26 @@ export default function Login({setSpaPath}){
     }
 
     function testConsume(){
-        fetch("https://pokeapi.co/api/v2/pokemon/ditto")
-        .then(response => response.json())
-        .then(data => setApiResponse(JSON.stringify(data.species)))
+        const userData = {
+            email: "bob.builder@example.com",
+            nickname: "bob",
+            password: "bobthebuilder",
+            is_admin: false
+        };
+
+        fetch(`${API_URL}/users`, {
+            // method: 'POST',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // body: JSON.stringify(userData)
+        })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch((error) => {
+                console.error('Error:', error);
+            })
     }
 
     return (

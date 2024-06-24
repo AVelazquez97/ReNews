@@ -9,8 +9,7 @@ use CodeIgniter\Config\BaseConfig;
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
  */
-class Cors extends BaseConfig
-{
+class Cors extends BaseConfig {
     /**
      * The default CORS configuration.
      *
@@ -24,6 +23,16 @@ class Cors extends BaseConfig
      *      maxAge: int,
      *  }
      */
+    public array $api = [
+        'allowedOrigins'         => ['http://localhost:5173','https://renews.alexisvelazquez.tech'],
+        'allowedOriginsPatterns' => [],
+        'supportsCredentials'    => true,
+        'allowedHeaders'         => ['Authorization', 'Content-Type'],
+        'exposedHeaders'         => [],
+        'allowedMethods'         => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        'maxAge'                 => 7200,
+    ];
+
     public array $default = [
         /**
          * Origins for the `Access-Control-Allow-Origin` header.
