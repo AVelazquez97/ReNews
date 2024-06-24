@@ -1,4 +1,5 @@
 export const API_URL = "https://api.renews.alexisvelazquez.tech/api";
+//export const API_URL = "http://localhost:8080/api";
 
 export const SPA_PATH = {
     LOGIN: 'LOGIN',
