@@ -61,28 +61,30 @@ export default function Login({setSpaPath}){
         setIsForgotPasswordModalOpen(false);
     }
 
-    function testConsume(){
-        const userData = {
-            email: "bob.builder@example.com",
-            nickname: "bob",
-            password: "bobthebuilder",
-            is_admin: false
-        };
-
-        fetch(`${API_URL}/users`, {
-            // method: 'POST',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            // body: JSON.stringify(userData)
-        })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch((error) => {
-                console.error('Error:', error);
-            })
-    }
+    // const testConsume = async () => {
+    //     const userData = {
+    //         email: "bob.builder@example.com",
+    //         nickname: "bob",
+    //         password: "bobthebuilder",
+    //         is_admin: false
+    //     };
+    //
+    //     try {
+    //         const response = await fetch(`${API_URL}/users`, {
+    //             // method: 'POST',
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             // body: JSON.stringify(userData)
+    //         });
+    //
+    //         const data = await response.json();
+    //         console.log(data);
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // }
 
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
@@ -168,7 +170,7 @@ export default function Login({setSpaPath}){
                 <div className={"w-100 d-flex justify-content-center gap-2"}>
                     {view === "login" ?
                         <>
-                            <button className="btn btn-danger fw-bold" onClick={() => testConsume()}>Hacer la consumición</button>
+                            {/*<button className="btn btn-danger fw-bold" onClick={() => testConsume()}>Hacer la consumición</button>*/}
                             <button className="btn btn-primary fw-bold"
                                     onClick={() => setView("register")}>Registrarse
                             </button>
