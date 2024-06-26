@@ -1,4 +1,3 @@
-import react from 'react';
 import {SPA_PATH} from '../../const.js'
 import {isAdmin} from "../../utils.js";
 export default function Header({spaPath, setSpaPath}){

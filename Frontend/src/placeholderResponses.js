@@ -20,11 +20,13 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
         "ownerId": "user123",
         "comments": [
             {
+                "id": "0",
                 "ownerId": "user456",
                 "date": "2024-06-10T09:00:00Z",
                 "body": "Increíble lo que se está logrando con la IA, especialmente en el campo de la salud."
             },
             {
+                "id": "1",
                 "ownerId": "user789",
                 "date": "2024-06-10T10:00:00Z",
                 "body": "Esperemos que estos avances sean usados para el bien común."
@@ -46,11 +48,13 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
         "ownerId": "user124",
         "comments": [
             {
+                "id": "0",
                 "ownerId": "user457",
                 "date": "2024-06-09T13:00:00Z",
                 "body": "La seguridad digital es más importante que nunca, hay que mantenerse alerta."
             },
             {
+                "id": "1",
                 "ownerId": "user790",
                 "date": "2024-06-09T14:00:00Z",
                 "body": "Es esencial invertir en buenas prácticas de ciberseguridad."
@@ -72,11 +76,13 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
         "ownerId": "user125",
         "comments": [
             {
+                "id": "0",
                 "ownerId": "user458",
                 "date": "2024-06-08T16:00:00Z",
                 "body": "La computación cuántica promete revolucionar múltiples industrias."
             },
             {
+                "id": "1",
                 "ownerId": "user791",
                 "date": "2024-06-08T17:00:00Z",
                 "body": "Es emocionante ver cómo se democratiza esta tecnología."
@@ -102,11 +108,13 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
         "ownerId": "user126",
         "comments": [
             {
+                "id": "0",
                 "ownerId": "user459",
                 "date": "2024-06-07T12:00:00Z",
                 "body": "Las regulaciones son cruciales para un desarrollo tecnológico responsable."
             },
             {
+                "id": "1",
                 "ownerId": "user792",
                 "date": "2024-06-07T13:00:00Z",
                 "body": "Es un buen paso hacia la protección de los datos personales."
@@ -132,11 +140,13 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
         "ownerId": "user127",
         "comments": [
             {
+                "id": "0",
                 "ownerId": "user460",
                 "date": "2024-06-06T15:00:00Z",
                 "body": "La 5G está cambiando la forma en que nos conectamos y comunicamos."
             },
             {
+                "id": "1",
                 "ownerId": "user793",
                 "date": "2024-06-06T16:00:00Z",
                 "body": "Espero que esta expansión llegue pronto a mi ciudad."
@@ -162,11 +172,13 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
             "ownerId": "user127",
             "comments": [
                 {
+                    "id": "0",
                     "ownerId": "user460",
                     "date": "2024-06-06T15:00:00Z",
                     "body": "La 5G está cambiando la forma en que nos conectamos y comunicamos."
                 },
                 {
+                    "id": "1",
                     "ownerId": "user793",
                     "date": "2024-06-06T16:00:00Z",
                     "body": "Espero que esta expansión llegue pronto a mi ciudad."
@@ -197,11 +209,13 @@ export const HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE = {
             "ownerId": "user123",
             "comments": [
                 {
+                    "id": "0",
                     "ownerId": "user456",
                     "date": "2024-06-10T09:00:00Z",
                     "body": "Increíble lo que se está logrando con la IA, especialmente en el campo de la salud."
                 },
                 {
+                    "id": "1",
                     "ownerId": "user789",
                     "date": "2024-06-10T10:00:00Z",
                     "body": "Esperemos que estos avances sean usados para el bien común."
@@ -223,11 +237,13 @@ export const HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE = {
             "ownerId": "user124",
             "comments": [
                 {
+                    "id": "0",
                     "ownerId": "user457",
                     "date": "2024-06-09T13:00:00Z",
                     "body": "La seguridad digital es más importante que nunca, hay que mantenerse alerta."
                 },
                 {
+                    "id": "1",
                     "ownerId": "user790",
                     "date": "2024-06-09T14:00:00Z",
                     "body": "Es esencial invertir en buenas prácticas de ciberseguridad."
@@ -249,11 +265,13 @@ export const HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE = {
             "ownerId": "user125",
             "comments": [
                 {
+                    "id": "0",
                     "ownerId": "user458",
                     "date": "2024-06-08T16:00:00Z",
                     "body": "La computación cuántica promete revolucionar múltiples industrias."
                 },
                 {
+                    "id": "1",
                     "ownerId": "user791",
                     "date": "2024-06-08T17:00:00Z",
                     "body": "Es emocionante ver cómo se democratiza esta tecnología."
