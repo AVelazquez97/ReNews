@@ -11,6 +11,7 @@ import {notNullNotEmptyString, now, userId, userName, validateNewPostForm} from 
 export default function NewPostModal({onClose}){
     const [postData, setPostData] = useState(POST_DATA_INITIAL_STATE);
     const [selectedTags, setSelectedTags] = useState([]);
+
     const [validations,setValidations] = useState(VALIDATION_NEW_POST_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState({ALERT_INITIAL_STATE});
 

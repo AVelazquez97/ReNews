@@ -170,7 +170,7 @@ export default function Login({setSpaPath}){
                 <div className={"w-100 d-flex justify-content-center gap-2"}>
                     {view === "login" ?
                         <>
-                            <button className="btn btn-danger fw-bold" onClick={() => testConsume()}>Hacer la consumición</button>
+                            <button className="btn btn-danger fw-bold" onClick={() => testConsume()}>test consume</button>
                             <button className="btn btn-primary fw-bold"
                                     onClick={() => setView("register")}>Registrarse
                             </button>
