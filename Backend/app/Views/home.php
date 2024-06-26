@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome to ReNews API</title>
+    <title>ReNews API - Bienvenida</title>
     <meta name="description" content="Simple RESTful api made with CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="/renews-ico.svg" />
@@ -25,16 +25,18 @@
     <div class="heroe">
         <h1>Bienvenido a la página de inicio de la API de ReNews. </h1>
         <h2>
-            Esta es una API RESTful desarrollada con CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?>
+            Esta es una API RESTful desarrollada con PHP <?= phpversion(); ?> y CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?>
         </h2>
     </div>
 </header>
 
 <!-- CONTENT -->
-<section>
-    <p> En unos segundos serás redirigido a la documentación de la API hecha con Swagger...</p>
+<section class="content">
+    <p> En unos segundos serás redirigido a la documentación de la API.</p>
     <span> Si no eres redirigido automáticamente,</span>
-    <a href="/docs" class="button">puedes cliquear aquí. </a>
+    <a href="/docs" class="button todocs">puedes cliquear aquí. </a>
+    <br><br>
+    <div id="spinner"></div>
 </section>
 
 <!-- FOOTER: DEBUG INFO -->
@@ -49,7 +51,7 @@
 <script>
     setTimeout(() => {
         window.location.href = '/docs';
-    }, 6000);
+    }, 10000);
 </script>
 </body>
 </html>

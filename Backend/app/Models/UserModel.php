@@ -3,7 +3,39 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Schema(
+ *     schema="User",
+ *     required={"email", "nickname", "password", "is_admin"},
+ *     @OA\Property(
+ *         property="id",
+ *         type="integer",
+ *         description="The user's id"
+ *     ),
+ *     @OA\Property(
+ *         property="email",
+ *         type="string",
+ *         description="The user's email"
+ *     ),
+ *     @OA\Property(
+ *         property="nickname",
+ *         type="string",
+ *         description="The user's nickname"
+ *     ),
+ *     @OA\Property(
+ *         property="password",
+ *         type="string",
+ *         description="The user's password"
+ *     ),
+ *     @OA\Property(
+ *         property="is_admin",
+ *         type="boolean",
+ *         description="Whether the user is an admin"
+ *     )
+ * )
+ */
 class UserModel extends Model {
     protected $table = 'users';
     protected $primaryKey = 'id';

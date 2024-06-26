@@ -5,11 +5,52 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
+use OpenApi\Annotations as OA;
 
+/**
+ * @OA\Info(title="ReNewsAPI", version="1.0.0")
+ * @OA\Server(
+ *      url="https://api.renews.alexisvelazquez.tech/api",
+ *      description="Production Server"
+ *  )
+ * @OA\Server(
+ *     url="http://localhost:8080/api",
+ *     description="Development Server"
+ * )
+ * @OA\Parameter(
+ *     parameter="id",
+ *     in="path",
+ *     name="id",
+ *     required=true,
+ *     @OA\Schema(
+ *         type="integer"
+ *     ),
+ *     description="The id of the user"
+ * )
+ */
 class Users extends ResourceController {
     use ResponseTrait;
 
-    // get all users
+    /**
+     * @OA\Get(
+     *     path="/users",
+     *     tags={"Users"},
+     *     summary="Get all users",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: Retrieved all users",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/User"))
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No users found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
     public function index() {
         try {
             $userModel = new UserModel();
@@ -30,7 +71,27 @@ class Users extends ResourceController {
         }
     }
 
-    // get single user
+    /**
+     * @OA\Get(
+     *     path="/users/{id}",
+     *     tags={"Users"},
+     *     summary="Get a user by id",
+     *     @OA\Parameter(ref="#/components/parameters/id"),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: Retrieved user",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
     public function show($id = null) {
         try {
             $userModel = new UserModel();
@@ -48,7 +109,29 @@ class Users extends ResourceController {
         }
     }
 
-    // create a user
+    /**
+     * @OA\Post(
+     *     path="/users",
+     *     tags={"Users"},
+     *     summary="Create a user",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Success: User created",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user data"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
     public function create() {
         try {
             $userModel = new UserModel();
@@ -64,7 +147,34 @@ class Users extends ResourceController {
         }
     }
 
-    // update user
+    /**
+     * @OA\Put(
+     *     path="/users/{id}",
+     *     tags={"Users"},
+     *     summary="Update a user",
+     *     @OA\Parameter(ref="#/components/parameters/id"),
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: User updated",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid user data"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
     public function update($id = null) {
         try {
             $userModel = new UserModel();
@@ -81,7 +191,26 @@ class Users extends ResourceController {
         }
     }
 
-    // delete user
+    /**
+     * @OA\Delete(
+     *     path="/users/{id}",
+     *     tags={"Users"},
+     *     summary="Delete a user",
+     *     @OA\Parameter(ref="#/components/parameters/id"),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: User deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
     public function delete($id = null) {
         try {
             $userModel = new UserModel();
