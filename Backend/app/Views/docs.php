@@ -5,9 +5,16 @@
     <title>ReNews API - Swagger Docs</title>
     <meta name="description" content="Simple RESTful api made with CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/renews-ico.svg" />
-    <link rel="icon" type="image/png" href="/swagger/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="/swagger/favicon-16x16.png" sizes="16x16" />
+    <!--    <link rel="icon" type="image/svg+xml" href="/renews-ico.svg" />-->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_package/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_package/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_package/favicon-16x16.png">
+    <link rel="manifest" href="/favicon_package/site.webmanifest">
+    <link rel="mask-icon" href="/favicon_package/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="apple-mobile-web-app-title" content="ReNews">
+    <meta name="application-name" content="ReNews">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
     <!-- STYLES -->
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" type="text/css" href="/swagger/swagger-ui.css" />
