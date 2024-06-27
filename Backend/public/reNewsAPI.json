@@ -30,7 +30,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/User"
+                                        "$ref": "#/components/schemas/UserOutput"
                                     }
                                 }
                             }
@@ -48,30 +48,30 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Create a user",
-                "operationId": "e2287feb9dd283b60917f1e06c187e21",
+                "summary": "Register a user",
+                "operationId": "cf16f922abcd3a17aff04c3791e2bf36",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/User"
+                                "$ref": "#/components/schemas/UserInput"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Success: User created",
+                        "description": "Success: User registered",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/User"
+                                    "$ref": "#/components/schemas/UserOutput"
                                 }
                             }
                         }
                     },
                     "400": {
-                        "description": "Invalid user data"
+                        "description": "Invalid user data or user already exists"
                     },
                     "500": {
                         "description": "An error occurred"
@@ -97,7 +97,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/User"
+                                    "$ref": "#/components/schemas/UserOutput"
                                 }
                             }
                         }
@@ -125,7 +125,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/User"
+                                "$ref": "#/components/schemas/UserInput"
                             }
                         }
                     }
@@ -136,7 +136,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/User"
+                                    "$ref": "#/components/schemas/UserOutput"
                                 }
                             }
                         }
@@ -179,12 +179,14 @@
     },
     "components": {
         "schemas": {
-            "User": {
+            "UserInput": {
                 "required": [
                     "email",
-                    "nickname",
                     "password",
-                    "is_admin"
+                    "name",
+                    "lastname",
+                    "username",
+                    "isAdmin"
                 ],
                 "properties": {
                     "id": {
@@ -195,15 +197,67 @@
                         "description": "The user's email",
                         "type": "string"
                     },
-                    "nickname": {
-                        "description": "The user's nickname",
-                        "type": "string"
-                    },
                     "password": {
                         "description": "The user's password",
                         "type": "string"
                     },
-                    "is_admin": {
+                    "name": {
+                        "description": "The user's name",
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "description": "The user's lastname",
+                        "type": "string"
+                    },
+                    "username": {
+                        "description": "The user's username",
+                        "type": "string"
+                    },
+                    "profileImage": {
+                        "description": "The user's profile image",
+                        "type": "string"
+                    },
+                    "isAdmin": {
+                        "description": "Whether the user is an admin",
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "UserOutput": {
+                "required": [
+                    "email",
+                    "name",
+                    "lastname",
+                    "username",
+                    "isAdmin"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The user's id",
+                        "type": "integer"
+                    },
+                    "email": {
+                        "description": "The user's email",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The user's name",
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "description": "The user's lastname",
+                        "type": "string"
+                    },
+                    "username": {
+                        "description": "The user's username",
+                        "type": "string"
+                    },
+                    "profileImage": {
+                        "description": "The user's profile image",
+                        "type": "string"
+                    },
+                    "isAdmin": {
                         "description": "Whether the user is an admin",
                         "type": "boolean"
                     }

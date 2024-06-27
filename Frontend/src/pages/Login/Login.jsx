@@ -68,7 +68,7 @@ export default function Login({setSpaPath}){
             email: "bob.builder@example.com",
             nickname: "bob",
             password: "bobthebuilder",
-            is_admin: false
+            isAdmin: false
         };
 
         fetch(`${API_URL}/users`, {

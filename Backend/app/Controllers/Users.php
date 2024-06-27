@@ -39,7 +39,7 @@ class Users extends ResourceController {
      *     @OA\Response(
      *         response=200,
      *         description="Success: Retrieved all users",
-     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/User"))
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/UserOutput"))
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -59,10 +59,11 @@ class Users extends ResourceController {
             if (empty($data)) {
                 return $this->failNotFound('No Users Found');
             }
-            // Convert data types
+
             foreach ($data as &$user) {
                 $user['id'] = intval($user['id']);
-                $user['is_admin'] = filter_var($user['is_admin'], FILTER_VALIDATE_BOOLEAN);
+                $user['isAdmin'] = filter_var($user['isAdmin'], FILTER_VALIDATE_BOOLEAN);
+                unset($user['password']);
             }
 
             return $this->respond($data);
@@ -80,7 +81,7 @@ class Users extends ResourceController {
      *     @OA\Response(
      *         response=200,
      *         description="Success: Retrieved user",
-     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *         @OA\JsonContent(ref="#/components/schemas/UserOutput")
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -102,7 +103,7 @@ class Users extends ResourceController {
             }
 
             $data['id'] = intval($data['id']);
-            $data['is_admin'] = filter_var($data['is_admin'], FILTER_VALIDATE_BOOLEAN);
+            $data['isAdmin'] = filter_var($data['isAdmin'], FILTER_VALIDATE_BOOLEAN);
             return $this->respond($data);
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
@@ -113,18 +114,18 @@ class Users extends ResourceController {
      * @OA\Post(
      *     path="/users",
      *     tags={"Users"},
-     *     summary="Create a user",
+     *     summary="Register a user",
      *     @OA\RequestBody(
-     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *         @OA\JsonContent(ref="#/components/schemas/UserInput")
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Success: User created",
-     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *         description="Success: User registered",
+     *         @OA\JsonContent(ref="#/components/schemas/UserOutput")
      *     ),
      *     @OA\Response(
      *         response=400,
-     *         description="Invalid user data"
+     *         description="Invalid user data or user already exists"
      *     ),
      *     @OA\Response(
      *         response=500,
@@ -132,15 +133,21 @@ class Users extends ResourceController {
      *     )
      * )
      */
-    public function create() {
+    public function register() {
         try {
             $userModel = new UserModel();
             $data = $this->request->getJSON(true);
 
-            $data['is_admin'] = filter_var($data['is_admin'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+            if ($this->doesUserExist($data['username'], $data['email'])) {
+                return $this->fail('Username or email already exists');
+            }
+
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            $data['isAdmin'] = filter_var($data['isAdmin'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
 
             $insertedId = $userModel->insert($data);
             $data['id'] = $insertedId;
+            unset($data['password']);
             return $this->respondCreated($data, 'Data Saved');
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
@@ -154,12 +161,12 @@ class Users extends ResourceController {
      *     summary="Update a user",
      *     @OA\Parameter(ref="#/components/parameters/id"),
      *     @OA\RequestBody(
-     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *         @OA\JsonContent(ref="#/components/schemas/UserInput")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Success: User updated",
-     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *         @OA\JsonContent(ref="#/components/schemas/UserOutput")
      *     ),
      *     @OA\Response(
      *         response=400,
@@ -184,7 +191,12 @@ class Users extends ResourceController {
                 return $this->failNotFound('No Data Found with id ' . $id);
             }
 
+            if (isset($data['password'])) {
+                $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+            }
+
             $userModel->update($id, $data);
+            unset($data['password']);
             return $this->respond($data, 'Data Updated');
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
@@ -225,5 +237,11 @@ class Users extends ResourceController {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
         }
     }
+
+    private function doesUserExist($username, $email) {
+        $userModel = new UserModel();
+        return $userModel->doesUserExist($username, $email);
+    }
+
     // login user
 }

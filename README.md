@@ -228,16 +228,19 @@ This is a university project for RIA and PHP. Subjects that are part of the curr
 
 3. Creation of the tables:
 
-  - Users table:
-    ```
-    CREATE TABLE users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      email VARCHAR(255) NOT NULL,
-      nickname VARCHAR(255) NOT NULL,
-      password VARCHAR(255) NOT NULL,
-      is_admin BOOLEAN DEFAULT FALSE
-    );
-    ```
+   - Users table:
+     ```
+     CREATE TABLE users (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     email VARCHAR(255) NOT NULL,
+     password VARCHAR(255) NOT NULL,
+     name VARCHAR(255) NOT NULL,
+     lastname VARCHAR(255) NOT NULL,
+     username VARCHAR(255) NOT NULL,
+     profileImage VARCHAR(255),
+     isAdmin BOOLEAN DEFAULT FALSE
+     );
+     ```
 
 # 3. Downloading the project from GitHub
 
