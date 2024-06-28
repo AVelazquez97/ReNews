@@ -13,6 +13,7 @@ $routes->group('api', ['filter' => 'cors:api'], ['namespace' => 'App\Controllers
     /* User Router */
     $routes->get('users', 'Users::index');
     $routes->get('users/(:any)', 'Users::show/$1');
+    $routes->post('users/login', 'Users::login');
     $routes->post('users/register', 'Users::register');
     $routes->post('users/forgotPassword', 'Users::forgotPassword');
     $routes->put('users/(:any)', 'Users::update/$1');

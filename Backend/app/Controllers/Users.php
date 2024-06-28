@@ -117,6 +117,60 @@ class Users extends ResourceController {
 
     /**
      * @OA\Post(
+     *     path="/users/login",
+     *     tags={"Users"},
+     *     summary="Log in a user",
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"usernameOrEmail", "password"},
+     *             @OA\Property(
+     *                 property="usernameOrEmail",
+     *                 type="string",
+     *                 description="The user's username or email"
+     *             ),
+     *             @OA\Property(
+     *                 property="password",
+     *                 type="string",
+     *                 description="The user's password"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: User logged in",
+     *         @OA\JsonContent(ref="#/components/schemas/UserOutput")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized: Invalid Username or Password"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
+    public function login() {
+        try {
+            $data = $this->request->getJSON(true);
+            $user = $this->userModel->getUserByUsernameOrEmail($data['usernameOrEmail']);
+
+            if (!$user || !$this->userModel->verifyPassword($data['password'], $user['password'])) {
+                return $this->failUnauthorized('Invalid Username or Password');
+            }
+
+            unset($user['password']);
+            $user['id'] = intval($user['id']);
+            $user['isAdmin'] = filter_var($user['isAdmin'], FILTER_VALIDATE_BOOLEAN);
+            return $this->respond($user);
+        } catch (\Exception $e) {
+            return $this->failServerError('An error occurred: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @OA\Post(
      *     path="/users/register",
      *     tags={"Users"},
      *     summary="Register a user",
@@ -205,11 +259,10 @@ class Users extends ResourceController {
             $hashedPassword = $this->userModel->hashPassword($newGeneratedPassword);
             $this->userModel->update($user['id'], ['password' => $hashedPassword]);
 
-            log_message('info', 'New password generated: ' . $newGeneratedPassword);
+            // log_message('info', 'New password generated: ' . $newGeneratedPassword);
 
             $emailService = new EmailService();
             $emailService->sendNewPasswordEmail($email, $newGeneratedPassword);
-            //  $this->sendNewPasswordEmail($email, $newGeneratedPassword);
 
             return $this->respond('New password email sent');
         } catch (\Exception $e) {

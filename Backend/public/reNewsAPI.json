@@ -43,40 +43,6 @@
                         "description": "An error occurred"
                     }
                 }
-            },
-            "post": {
-                "tags": [
-                    "Users"
-                ],
-                "summary": "Register a user",
-                "operationId": "cf16f922abcd3a17aff04c3791e2bf36",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserInput"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Success: User registered",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserOutput"
-                                }
-                            }
-                        }
-                    },
-                    "409": {
-                        "description": "Username or email already exists"
-                    },
-                    "500": {
-                        "description": "An error occurred"
-                    }
-                }
             }
         },
         "/users/{id}": {
@@ -169,6 +135,92 @@
                     },
                     "404": {
                         "description": "User not found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Log in a user",
+                "operationId": "2ab6a9d6ad2d8ad68fcb840350671e8d",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "usernameOrEmail",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "usernameOrEmail": {
+                                        "description": "The user's username or email",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "The user's password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: User logged in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOutput"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized: Invalid Username or Password"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/users/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Register a user",
+                "operationId": "2beec4e088d9b31b23cb16ef2f48f0f7",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success: User registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserOutput"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Username or email already exists"
                     },
                     "500": {
                         "description": "An error occurred"

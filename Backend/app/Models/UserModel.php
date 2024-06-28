@@ -105,20 +105,20 @@ class UserModel extends Model {
         return $this->find($id);
     }
 
-    public function hashPassword($password) {
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
-
     public function getUserByEmail($email) {
         return $this->where('email', $email)->first();
     }
 
-    public function getUserByEmailAndPassword($email, $password) {
-        return $this->where('email', $email)->where('password', $password)->first();
+    public function getUserByUsernameOrEmail($usernameOrEmail) {
+        return $this->where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
     }
 
-    public function getUserByEmailAndNickname($email, $nickname) {
-        return $this->where('email', $email)->where('nickname', $nickname)->first();
+    public function hashPassword($password) {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public function verifyPassword($password, $hash) {
+        return password_verify($password, $hash);
     }
 
 //    // One-to-many relationship with Comment
