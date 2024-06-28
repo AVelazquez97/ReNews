@@ -272,8 +272,9 @@ After that, you must follow the following steps for each part of the project:
 
 1. `cd Backend`
 2. `cp envExample .env`
-3. `composer install`
-4. `php spark serve`
+3. `mkdir writable/logs`
+4. `composer install`
+5. `php spark serve`
 <!-- 
 4. `php spark migrate`
 5. `php spark db:seed ..seeders`

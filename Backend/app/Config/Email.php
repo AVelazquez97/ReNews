@@ -3,10 +3,11 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
+use http\Env;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail  = '';
+    public string $fromEmail = '';
     public string $fromName   = '';
     public string $recipients = '';
 
@@ -18,7 +19,7 @@ class Email extends BaseConfig
     /**
      * The mail sending protocol: mail, sendmail, smtp
      */
-    public string $protocol = 'mail';
+    public string $protocol = 'smtp';
 
     /**
      * The server path to Sendmail.
@@ -43,7 +44,7 @@ class Email extends BaseConfig
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 25;
+    public int $SMTPPort = 465;
 
     /**
      * SMTP Timeout (in seconds)
@@ -118,4 +119,13 @@ class Email extends BaseConfig
      * Enable notify message from server
      */
     public bool $DSN = false;
+
+    public function __construct() {
+        $this->fromEmail = env('mail.From');
+        $this->fromName = env('mail.FromName');
+        $this->SMTPHost = env('mail.Host');
+        $this->SMTPUser = env('mail.Username');
+        $this->SMTPPass = env('mail.Password');
+        $this->SMTPCrypto = env('mail.SMTPSecure');
+    }
 }

@@ -96,17 +96,21 @@ class UserModel extends Model {
     protected $primaryKey = 'id';
     protected $allowedFields = ['email', 'password', 'name', 'lastname', 'username', 'profileImage', 'isAdmin'];
 
-    public function doesUserExist($username, $email) {
+    public function doesUserExist($username, $email): bool {
         $user = $this->where('username', $username)->orWhere('email', $email)->first();
         return $user !== null;
     }
 
-    public function getUserByEmail($email) {
-        return $this->where('email', $email)->first();
+    public function findUser($id) {
+        return $this->find($id);
     }
 
-    public function getUserById($id) {
-        return $this->where('id', $id)->first();
+    public function hashPassword($password) {
+        return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public function getUserByEmail($email) {
+        return $this->where('email', $email)->first();
     }
 
     public function getUserByEmailAndPassword($email, $password) {

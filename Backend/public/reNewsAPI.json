@@ -70,8 +70,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Invalid user data or user already exists"
+                    "409": {
+                        "description": "Username or email already exists"
                     },
                     "500": {
                         "description": "An error occurred"
@@ -164,8 +164,46 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Success: User deleted"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/users/forgotPassword": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Forgot password",
+                "operationId": "7823a26d3bee19b0973c6064e52831a2",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "The user's email",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success: New password email sent"
                     },
                     "404": {
                         "description": "User not found"
