@@ -1,45 +1,25 @@
-import {LOGIN_DATA_INITIAL_STATE, SPA_PATH, VALIDATION_REGISTER_FORM_INITIAL_STATE, API_URL} from "../../const.js";
+import {
+    LOGIN_DATA_INITIAL_STATE,
+    SPA_PATH,
+    VALIDATION_LOGIN_FORM_INITIAL_STATE,
+    VALIDATION_REGISTER_FORM_INITIAL_STATE
+} from "../../const.js";
 import Container from "../../components/Container/Container.jsx";
 import ForgotPasswordModal from "../../components/Modals/ForgotPasswordModal.jsx";
 import {useEffect, useState} from "react";
-import {notNullNotEmptyString, validateRegisterForm} from "../../utils.js";
+import {notNullNotEmptyString, validateLoginForm, validateRegisterForm} from "../../utils.js";
+import * as usersController from "../../controllers/usersController.js";
 
 export default function Login({setSpaPath}){
     const [view, setView] = useState("login");
-    const [loginData, setLoginData] = useState(LOGIN_DATA_INITIAL_STATE);
+    const [formData, setFormData] = useState(LOGIN_DATA_INITIAL_STATE);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
-    const [validations,setValidations] = useState(VALIDATION_REGISTER_FORM_INITIAL_STATE);
+    const [registerValidations,setRegisterValidations] = useState(VALIDATION_REGISTER_FORM_INITIAL_STATE);
+    const [loginValidations, setLoginValidations] = useState(VALIDATION_LOGIN_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState({visible: false, isError: false, message: ""});
-    const [apiResponse, setApiResponse] = useState(null);
-
-    function handleLogin(debugLoginType){
-        sessionStorage.setItem("isAdmin",debugLoginType);
-        sessionStorage.setItem("userId", "1");
-        sessionStorage.setItem("username", "testUserName");
-        setSpaPath(SPA_PATH.HOME);
-    }
-
-    function handleRegister(){
-        validateRegisterForm(loginData, setValidations);
-    }
-
-    useEffect(() => {
-        if(validations?.email?.message !== "" ||
-            validations?.password?.message !== "" ||
-            validations?.password_repeat?.message !== "" ||
-            validations?.username?.message !== ""){
-            console.log("[PLACEHOLDER] Validation failed, please check the form for errors.");
-        } else {
-            console.log("[PLACEHOLDER] Registering user: ", loginData);
-            //userController.registerUser(loginData);
-            setLoginData(LOGIN_DATA_INITIAL_STATE);
-            setView("login")
-            setAlert({visible: true, isError: false, message: "Usuario registrado correctamente."});
-        }
-    }, [validations]);
 
     function updateLoginData(value, key){
-        setLoginData({...loginData, [key]: value});
+        setFormData({...formData, [key]: value});
     }
 
     function handleFileChange(e) {
@@ -63,28 +43,64 @@ export default function Login({setSpaPath}){
         setIsForgotPasswordModalOpen(false);
     }
 
-    function testConsume(){
-        const userData = {
-            email: "bob.builder@example.com",
-            nickname: "bob",
-            password: "bobthebuilder",
-            isAdmin: false
+    /* login logic handling */
+
+    function handleLogin(){
+        validateLoginForm(formData, setLoginValidations);
+    }
+
+    useEffect(() => {
+        const loginUser = async () => {
+            const hasValidationErrors = Object.values(loginValidations).some(
+                validation => validation?.message !== ""
+            );
+
+            if (!hasValidationErrors) {
+                try {
+                    const data = await usersController.loginUser(formData);
+                    setFormData(LOGIN_DATA_INITIAL_STATE);
+                    setView("login");
+
+                    sessionStorage.setItem("isAdmin",data.isAdmin);
+                    sessionStorage.setItem("userId", data.id);
+                    sessionStorage.setItem("username", data.username);
+
+                    setSpaPath(SPA_PATH.HOME);
+                } catch (error) {
+                    setAlert({visible: true,isError: true,message: error.message});
+                }
+            }
         };
 
-        fetch(`${API_URL}/users`, {
-            // method: 'POST',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            // body: JSON.stringify(userData)
-        })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch((error) => {
-                console.error('Error:', error);
-            })
+        loginUser();
+    }, [loginValidations]);
+
+    /* register logic handling */
+
+    function handleRegister(){
+        validateRegisterForm(formData, setRegisterValidations);
     }
+
+    useEffect(() => {
+        const registerUser = async () => {
+            const hasValidationErrors = Object.values(registerValidations).some(
+                validation => validation?.message !== ""
+            );
+
+            if (!hasValidationErrors) {
+                try {
+                    await usersController.registerUser(formData);
+                    setFormData(LOGIN_DATA_INITIAL_STATE);
+                    setView("login");
+                    setAlert({visible: true,isError: false,message: "Usuario registrado correctamente."});
+                } catch (error) {
+                    setAlert({visible: true, isError: true, message: "Error al registrar el usuario."});
+                }
+            }
+        };
+
+        registerUser();
+    }, [registerValidations]);
 
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
@@ -97,64 +113,97 @@ export default function Login({setSpaPath}){
                     </div>
                 }
                 <form className={"text-start"}>
-                    {apiResponse &&
-                        <div>
-                            {apiResponse}
-                        </div>
+                    {view === "login" &&
+                        <>
+                            <div className="mb-3">
+                                <label className="form-label">Dirección de correo o nombre de usuario</label>
+                                <input type="email" className="form-control" value={formData.usernameOrEmail}
+                                       onChange={e => updateLoginData(e.target.value, "usernameOrEmail")}/>
+                                {
+                                    notNullNotEmptyString(loginValidations?.usernameOrEmail?.message) &&
+                                    <div className={`alert mt-2 alert-danger`}>
+                                        {loginValidations?.usernameOrEmail?.message}
+                                    </div>
+                                }
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputPassword1" className="form-label">Contraseña</label>
+                                <input type="password" className="form-control" value={formData.password}
+                                       onChange={e => updateLoginData(e.target.value, "password")}/>
+                                {
+                                    notNullNotEmptyString(loginValidations?.password?.message) &&
+                                    <div className={`alert mt-2 alert-danger`}>
+                                        {loginValidations?.password?.message}
+                                    </div>
+                                }
+                            </div>
+                        </>
                     }
-                    <div className="mb-3">
-                        <label className="form-label">Dirección de correo</label>
-                        <input type="email" className="form-control" value={loginData.email}
-                               onChange={e => updateLoginData(e.target.value, "email")}/>
-                        {
-                            notNullNotEmptyString(validations?.email?.message) &&
-                            <div className={`alert mt-2 alert-danger`}>
-                                {validations?.email?.message}
-                            </div>
-                        }
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="exampleInputPassword1" className="form-label">Contraseña</label>
-                        <input type="password" className="form-control" value={loginData.password}
-                               onChange={e => updateLoginData(e.target.value, "password")}/>
-                        {
-                            notNullNotEmptyString(validations?.password?.message) &&
-                            <div className={`alert mt-2 alert-danger`}>
-                                {validations?.password?.message}
-                            </div>
-                        }
-                    </div>
                     {view === "register" &&
                         <>
                             <div className="mb-3">
+                                <label className="form-label">Dirección de correo</label>
+                                <input type="email" className="form-control" value={formData.email}
+                                       onChange={e => updateLoginData(e.target.value, "email")}/>
+                                {
+                                    notNullNotEmptyString(registerValidations?.email?.message) &&
+                                    <div className={`alert mt-2 alert-danger`}>
+                                        {registerValidations?.email?.message}
+                                    </div>
+                                }
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="exampleInputPassword1" className="form-label">Contraseña</label>
+                                <input type="password" className="form-control" value={formData.password}
+                                       onChange={e => updateLoginData(e.target.value, "password")}/>
+                                {
+                                    notNullNotEmptyString(registerValidations?.password?.message) &&
+                                    <div className={`alert mt-2 alert-danger`}>
+                                        {registerValidations?.password?.message}
+                                    </div>
+                                }
+                            </div>
+                            <div className="mb-3">
                                 <label className="form-label">Repetir contraseña</label>
-                                <input type="password" className="form-control" value={loginData.password_repeat}
+                                <input type="password" className="form-control" value={formData.password_repeat}
                                        onChange={e => updateLoginData(e.target.value, "password_repeat")}/>
                                 {
-                                    notNullNotEmptyString(validations?.password_repeat?.message) &&
+                                    notNullNotEmptyString(registerValidations?.password_repeat?.message) &&
                                     <div className={`alert mt-2 alert-danger`}>
-                                        {validations?.password_repeat?.message}
+                                        {registerValidations?.password_repeat?.message}
                                     </div>
                                 }
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Nombre</label>
-                                <input className="form-control" value={loginData.name}
+                                <input className="form-control" value={formData.name}
                                        onChange={e => updateLoginData(e.target.value, "name")}/>
+                                {
+                                    notNullNotEmptyString(registerValidations?.name?.message) &&
+                                    <div className={`alert mt-2 alert-danger`}>
+                                        {registerValidations?.name?.message}
+                                    </div>
+                                }
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Apellido</label>
-                                <input className="form-control" value={loginData.surname}
-                                       onChange={e => updateLoginData(e.target.value, "surname")}/>
+                                <input className="form-control" value={formData.lastname}
+                                       onChange={e => updateLoginData(e.target.value, "lastname")}/>
+                                {
+                                    notNullNotEmptyString(registerValidations?.lastname?.message) &&
+                                    <div className={`alert mt-2 alert-danger`}>
+                                        {registerValidations?.lastname?.message}
+                                    </div>
+                                }
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Nombre de usuario</label>
-                                <input className="form-control" value={loginData.username}
+                                <input className="form-control" value={formData.username}
                                        onChange={e => updateLoginData(e.target.value, "username")}/>
                                 {
-                                    notNullNotEmptyString(validations?.username?.message) &&
+                                    notNullNotEmptyString(registerValidations?.username?.message) &&
                                     <div className={`alert mt-2 alert-danger`}>
-                                        {validations?.username?.message}
+                                        {registerValidations?.username?.message}
                                     </div>
                                 }
                             </div>
@@ -170,20 +219,18 @@ export default function Login({setSpaPath}){
                 <div className={"w-100 d-flex justify-content-center gap-2"}>
                     {view === "login" ?
                         <>
-                            <button className="btn btn-danger fw-bold" onClick={() => testConsume()}>test consume</button>
-                            <button className="btn btn-primary fw-bold"
+                            <button className="btn btn-dark fw-bold"
                                     onClick={() => setView("register")}>Registrarse
                             </button>
-                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(true)}>Iniciar sesión
-                                como
-                                admin
-                            </button>
-                            <button className="btn btn-dark fw-bold" onClick={() => handleLogin(false)}>Iniciar sesión
-                                normal
+                            <button className="btn btn-primary fw-bold" onClick={() => handleLogin()}>
+                                Iniciar sesión
                             </button>
                         </>
                         :
-                        <button className="btn btn-primary fw-bold" onClick={() => handleRegister()}>Enviar</button>
+                        <>
+                            <button className="btn btn-dark fw-bold" onClick={() => setView("login")}>Iniciar sesión</button>
+                            <button className="btn btn-primary fw-bold" onClick={() => handleRegister()}>Enviar</button>
+                        </>
                     }
                 </div>
                 <div className={"w-100 p-2"}>

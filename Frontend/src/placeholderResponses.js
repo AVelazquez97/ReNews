@@ -154,7 +154,7 @@ export const FEED_GET_POSTS_PLACEHOLDER_RESPONSE =
         ]
     },
         {
-            "id": "5",
+            "id": "6",
             "date": "2024-06-06T14:00:00Z",
             "likes": 130,
             "tags": [

@@ -41,10 +41,12 @@ export const LOGIN_DATA_INITIAL_STATE = {
     email: "",
     password: "",
     name: "",
-    surname: "",
+    lastname: "",
     username: "",
     password_repeat: "",
-    profile_image: "",
+    profileImage: "",
+    isAdmin: "0",
+    usernameOrEmail: "",
 }
 
 export const POST_DATA_INITIAL_STATE = { ownerId: "", username: "", title: "", body: "", tags: [], date: ""}
@@ -71,6 +73,13 @@ export const VALIDATION_REGISTER_FORM_INITIAL_STATE = {
     password: {message: null},
     password_repeat: {message: null},
     username: {message: null},
+    name: {message: null},
+    lastname: {message: null},
+}
+
+export const VALIDATION_LOGIN_FORM_INITIAL_STATE = {
+    usernameOrEmail: {message: null},
+    password: {message: null},
 }
 
 export const VALIDATION_FEED_FORM_INITIAL_STATE = {

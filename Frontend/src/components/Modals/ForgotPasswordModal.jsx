@@ -2,6 +2,7 @@ import Modal from "react-bootstrap/Modal";
 import {useState} from "react";
 import ConfirmationModal from "./ConfirmationModal.jsx";
 import {validateEmail} from "../../utils.js";
+import * as usersController from "../../controllers/usersController.js";
 
 export default function ForgotPasswordModal({onClose}){
     const [mail, setMail] = useState("");
@@ -14,14 +15,28 @@ export default function ForgotPasswordModal({onClose}){
         setConfirmationModalFunction(() => handleForgot);
     }
 
-    function handleForgot(){
-        if(validateEmail(mail)){
-            console.log("[PLACEHOLDER] Requesting password recovery for mail: ", mail);
-            //userController.forgotPassword(mail);
-            setAlert({visible: true, isError: false, message: "Proceso iniciado correctamente, se ha enviado un correo con instrucciones para recuperar su contraseña."});
+    async function handleForgot(){
+        if (validateEmail(mail)) {
+            try {
+                await usersController.forgotPassword(mail);
+                setAlert({
+                    visible: true,
+                    isError: false,
+                    message: "Proceso iniciado correctamente, se ha enviado un correo con instrucciones para recuperar su contraseña."
+                });
+            } catch (error) {
+                setAlert({
+                    visible: true,
+                    isError: true,
+                    message: error.message || "Error al iniciar el proceso de recuperación de contraseña."
+                });
+            }
         } else {
-            console.log("[PLACEHOLDER] Invalid email format: ", mail);
-            setAlert({visible: true, isError: true, message: "Por favor ingrese una dirección de correo válida."});
+            setAlert({
+                visible: true,
+                isError: true,
+                message: "Por favor ingrese una dirección de correo válida."
+            });
         }
     }
 

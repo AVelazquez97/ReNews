@@ -3,23 +3,27 @@ import {
     PROFILE_DATA_INITIAL_STATE,
     SPA_PATH,
     TAG_DATA_INITIAL_STATE,
-    VALIDATION_NEW_POST_FORM_INITIAL_STATE, VALIDATION_NEW_TAG_FORM_INITIAL_STATE
+    VALIDATION_NEW_TAG_FORM_INITIAL_STATE
 } from "../../const.js";
 import {useEffect, useState} from "react";
 import Container from "../../components/Container/Container.jsx";
-import {isAdmin, notNullNotEmptyString, validateNewTagForm} from "../../utils.js";
+import {isAdmin, notNullNotEmptyString, userId, validateNewTagForm} from "../../utils.js";
 import PostCard from "../../components/PostCard/PostCard.jsx";
 import {
     FEED_GET_POSTS_PLACEHOLDER_RESPONSE,
-    PROFILE_GET_USER_PLACEHOLDER_RESPONSE
 } from "../../placeholderResponses.js";
 import UserCard from "../../components/Card/UserCard.jsx";
+import * as usersController from "../../controllers/usersController.js";
+import SkeletonUserCard from "../../components/Card/SkeletonUserCard.jsx";
+import SkeletonPostCard from "../../components/PostCard/SkeletonPostCard.jsx";
+import SkeletonProfileInfo from "../../components/Skeletons/SkeletonProfileInfo.jsx";
 
 export default function Profile({setSpaPath}){
-    const [profileData, setProfileData] = useState(PROFILE_DATA_INITIAL_STATE);
+    const [profileData, setProfileData] = useState(null);
     const [tagName, setTagName] = useState(TAG_DATA_INITIAL_STATE);
     const [ownedPosts, setOwnedPosts] = useState([]);
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState(null);
+    const [userAlert,setUserAlert] = useState({ALERT_INITIAL_STATE});
     const [tagValidations,setTagValidations] = useState(VALIDATION_NEW_TAG_FORM_INITIAL_STATE);
     const [tagAlert,setTagAlert] = useState({ALERT_INITIAL_STATE});
 
@@ -34,6 +38,37 @@ export default function Profile({setSpaPath}){
             setTagName(TAG_DATA_INITIAL_STATE);
         }
     }, [tagValidations]);
+
+
+    /* fetch the users */
+    useEffect(() => {
+        const getUsers = async () => {
+            if(isAdmin()){
+                try {
+                    let data = await usersController.getUsers();
+                    setUsers(data);
+                } catch (error) {
+                    setUserAlert({visible: true, isError: true, message: "Error al obtener los usuarios."});
+                }
+            }
+        }
+
+        getUsers();
+    }, []);
+
+    /* fetch the initial profile info */
+    useEffect(() => {
+        const getProfile = async () => {
+            try {
+                let data = await usersController.getUser(userId());
+                setProfileData(data);
+            } catch (error) {
+                setUserAlert({visible: true, isError: true, message: "Error al obtener la información de perfil."});
+            }
+        }
+
+        getProfile();
+    }, []);
 
     function updateProfileData(value, key){
         setProfileData({...profileData, [key]: value});
@@ -61,11 +96,6 @@ export default function Profile({setSpaPath}){
         setOwnedPosts(JSON.parse(JSON.stringify(FEED_GET_POSTS_PLACEHOLDER_RESPONSE.posts)));
     }, []);
 
-    useEffect(() => {
-        //usersController.getUsers();
-        setUsers(JSON.parse(JSON.stringify(PROFILE_GET_USER_PLACEHOLDER_RESPONSE.users)));
-    }, []);
-
     function handleNewTag(){
         validateNewTagForm(tagName, setTagValidations);
     }
@@ -79,31 +109,37 @@ export default function Profile({setSpaPath}){
             <div className={"d-flex flex-row w-100"}>
                 <Container alignItems={"start"} width={"100"}>
                     <p className={"fs-3 fw-bold"}> Perfil </p>
-                    <form className={"text-start"}>
-                        <div className="mb-3">
-                            <label className="form-label">Imagen de perfil</label>
-                            <input className="form-control form-control-sm" type="file"
-                                   onChange={handleFileChange}/>
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Nombre</label>
-                            <input type="email" className="form-control" value={profileData.name}
-                                   onChange={e => updateProfileData(e.target.value, "email")}/>
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Apellido</label>
-                            <input type="email" className="form-control" value={profileData.surname}
-                                   onChange={e => updateProfileData(e.target.value, "surname}")}/>
-                        </div>
-                        <div className="mb-3">
-                            <label className="form-label">Username</label>
-                            <input type="email" className="form-control" value={profileData.username}
-                                   onChange={e => updateProfileData(e.target.value, "username")}/>
-                        </div>
-                    </form>
-                    <div className={"d-flex justify-content-end w-100"}>
-                        <button className="btn btn-dark fw-bold">Guardar</button>
-                    </div>
+                    {profileData === null ?
+                        <SkeletonProfileInfo/>
+                        :
+                        <>
+                            <form className={"text-start"}>
+                                <div className="mb-3">
+                                    <label className="form-label">Imagen de perfil</label>
+                                    <input className="form-control form-control-sm" type="file"
+                                           onChange={handleFileChange}/>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Nombre</label>
+                                    <input type="email" className="form-control" value={profileData.name}
+                                           onChange={e => updateProfileData(e.target.value, "email")}/>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Apellido</label>
+                                    <input type="email" className="form-control" value={profileData.surname}
+                                           onChange={e => updateProfileData(e.target.value, "surname}")}/>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="form-label">Username</label>
+                                    <input type="email" className="form-control" value={profileData.username}
+                                           onChange={e => updateProfileData(e.target.value, "username")}/>
+                                </div>
+                            </form>
+                            <div className={"d-flex justify-content-end w-100"}>
+                                <button className="btn btn-dark fw-bold">Guardar</button>
+                            </div>
+                        </>
+                    }
                 </Container>
                 {isAdmin() &&
                     <Container width={"25"}>
@@ -150,11 +186,25 @@ export default function Profile({setSpaPath}){
                 </Container>
                 {isAdmin() &&
                     <Container justifyContent={"start"} gap={"2"} width={"100"}>
-                        {users.map(user => {
-                            return (
-                                <UserCard key={user.id} user={user}/>
-                            )
-                        })}
+                        {
+                            userAlert?.visible && userAlert?.isError === false &&
+                            <div className={`alert mt-2 alert-success`}>
+                                {userAlert?.message}
+                            </div>
+                        }
+                        {users === null ?
+                            <>
+                                <SkeletonUserCard/>
+                                <SkeletonUserCard/>
+                                <SkeletonUserCard/>
+                            </>
+                            :
+                            users?.map(user => {
+                                return (
+                                    <UserCard key={user.id} user={user}/>
+                                )
+                            })
+                        }
                     </Container>
                 }
             </div>

@@ -87,6 +87,32 @@ export function validateRegisterForm(data, setValidations) {
     } else {
         setValidations(prevState => ({...prevState, username: {message: ""}}));
     }
+
+    if (!validateUsername(data.name)) {
+        setValidations(prevState => ({...prevState, name: {message: "El nombre debe tener al menos 3 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, name: {message: ""}}));
+    }
+
+    if (!validateUsername(data.lastname)) {
+        setValidations(prevState => ({...prevState, lastname: {message: "El apellido debe tener al menos 3 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, lastname: {message: ""}}));
+    }
+}
+
+export function validateLoginForm(data, setValidations) {
+    if (!validateUsername(data.usernameOrEmail)) {
+        setValidations(prevState => ({...prevState, usernameOrEmail: {message: "Este campo debe tener al menos 3 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, usernameOrEmail: {message: ""}}));
+    }
+
+    if (!validatePassword(data.password)) {
+        setValidations(prevState => ({...prevState, password: {message: "La contraseña debe tener al menos 8 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, password: {message: ""}}));
+    }
 }
 
 export function validateFeedSearch(search, setValidations) {
