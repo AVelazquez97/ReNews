@@ -1,16 +1,16 @@
-import {LOGIN_DATA_INITIAL_STATE, SPA_PATH, VALIDATION_REGISTER_FORM_INITIAL_STATE, API_URL} from "../../const.js";
+import {LOGIN_DATA_INITIAL_STATE, SPA_PATH, VALIDATION_REGISTER_FORM_INITIAL_STATE} from "../../const.js";
 import Container from "../../components/Container/Container.jsx";
 import ForgotPasswordModal from "../../components/Modals/ForgotPasswordModal.jsx";
 import {useEffect, useState} from "react";
 import {notNullNotEmptyString, validateRegisterForm} from "../../utils.js";
+import * as usersController from "../../controllers/usersController.js";
 
 export default function Login({setSpaPath}){
     const [view, setView] = useState("login");
-    const [loginData, setLoginData] = useState(LOGIN_DATA_INITIAL_STATE);
+    const [formData, setFormData] = useState(LOGIN_DATA_INITIAL_STATE);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
     const [validations,setValidations] = useState(VALIDATION_REGISTER_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState({visible: false, isError: false, message: ""});
-    const [apiResponse, setApiResponse] = useState(null);
 
     function handleLogin(debugLoginType){
         sessionStorage.setItem("isAdmin",debugLoginType);
@@ -20,26 +20,32 @@ export default function Login({setSpaPath}){
     }
 
     function handleRegister(){
-        validateRegisterForm(loginData, setValidations);
+        validateRegisterForm(formData, setValidations);
     }
 
     useEffect(() => {
-        if(validations?.email?.message !== "" ||
-            validations?.password?.message !== "" ||
-            validations?.password_repeat?.message !== "" ||
-            validations?.username?.message !== ""){
-            console.log("[PLACEHOLDER] Validation failed, please check the form for errors.");
-        } else {
-            console.log("[PLACEHOLDER] Registering user: ", loginData);
-            //userController.registerUser(loginData);
-            setLoginData(LOGIN_DATA_INITIAL_STATE);
-            setView("login")
-            setAlert({visible: true, isError: false, message: "Usuario registrado correctamente."});
-        }
-    }, [validations]);
+        const registerUser = async () => {
+            const hasValidationErrors = Object.values(validations).some(
+                validation => validation?.message !== ""
+            );
+
+            if (!hasValidationErrors) {
+                try {
+                    await usersController.registerUser(formData);
+                    setFormData(LOGIN_DATA_INITIAL_STATE);
+                    setView("login");
+                    setAlert({visible: true,isError: false,message: "Usuario registrado correctamente."});
+                } catch (error) {
+                    setAlert({visible: true,isError: true,message: "Error al registrar el usuario."});
+                }
+            }
+        };
+
+        registerUser();
+    }, [validations, formData]);
 
     function updateLoginData(value, key){
-        setLoginData({...loginData, [key]: value});
+        setFormData({...formData, [key]: value});
     }
 
     function handleFileChange(e) {
@@ -63,29 +69,6 @@ export default function Login({setSpaPath}){
         setIsForgotPasswordModalOpen(false);
     }
 
-    function testConsume(){
-        const userData = {
-            email: "bob.builder@example.com",
-            nickname: "bob",
-            password: "bobthebuilder",
-            isAdmin: false
-        };
-
-        fetch(`${API_URL}/users`, {
-            // method: 'POST',
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            // body: JSON.stringify(userData)
-        })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch((error) => {
-                console.error('Error:', error);
-            })
-    }
-
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
         {isForgotPasswordModalOpen && <ForgotPasswordModal onClose={handleCloseForgotPasswordModal} isOpen={isForgotPasswordModalOpen}/>}
@@ -97,14 +80,9 @@ export default function Login({setSpaPath}){
                     </div>
                 }
                 <form className={"text-start"}>
-                    {apiResponse &&
-                        <div>
-                            {apiResponse}
-                        </div>
-                    }
                     <div className="mb-3">
                         <label className="form-label">Dirección de correo</label>
-                        <input type="email" className="form-control" value={loginData.email}
+                        <input type="email" className="form-control" value={formData.email}
                                onChange={e => updateLoginData(e.target.value, "email")}/>
                         {
                             notNullNotEmptyString(validations?.email?.message) &&
@@ -115,7 +93,7 @@ export default function Login({setSpaPath}){
                     </div>
                     <div className="mb-3">
                         <label htmlFor="exampleInputPassword1" className="form-label">Contraseña</label>
-                        <input type="password" className="form-control" value={loginData.password}
+                        <input type="password" className="form-control" value={formData.password}
                                onChange={e => updateLoginData(e.target.value, "password")}/>
                         {
                             notNullNotEmptyString(validations?.password?.message) &&
@@ -128,7 +106,7 @@ export default function Login({setSpaPath}){
                         <>
                             <div className="mb-3">
                                 <label className="form-label">Repetir contraseña</label>
-                                <input type="password" className="form-control" value={loginData.password_repeat}
+                                <input type="password" className="form-control" value={formData.password_repeat}
                                        onChange={e => updateLoginData(e.target.value, "password_repeat")}/>
                                 {
                                     notNullNotEmptyString(validations?.password_repeat?.message) &&
@@ -139,17 +117,17 @@ export default function Login({setSpaPath}){
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Nombre</label>
-                                <input className="form-control" value={loginData.name}
+                                <input className="form-control" value={formData.name}
                                        onChange={e => updateLoginData(e.target.value, "name")}/>
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Apellido</label>
-                                <input className="form-control" value={loginData.surname}
+                                <input className="form-control" value={formData.surname}
                                        onChange={e => updateLoginData(e.target.value, "surname")}/>
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Nombre de usuario</label>
-                                <input className="form-control" value={loginData.username}
+                                <input className="form-control" value={formData.username}
                                        onChange={e => updateLoginData(e.target.value, "username")}/>
                                 {
                                     notNullNotEmptyString(validations?.username?.message) &&

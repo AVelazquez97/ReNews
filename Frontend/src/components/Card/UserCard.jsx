@@ -10,10 +10,10 @@ export default function UserCard({user}){
                     <div className={"d-flex flex-column w-100 align-items-start"}>
                         <p className={"fw-medium"}>Email: {user?.email}</p>
                         <p className={"fw-medium"}>Nombre: {user?.name}</p>
-                        <p className={"fw-medium"}>Apellido: {user?.surname}</p>
-                        <p className={"fw-medium"}>Post hechos: {user?.postsAmount}</p>
+                        <p className={"fw-medium"}>Apellido: {user?.lastname}</p>
+                        {/*<p className={"fw-medium"}>Post hechos: {user?.postsAmount}</p>
                         <p className={"fw-medium"}>Comentarios hechos: {user?.commentsAmount}</p>
-                        <p className={"fw-medium"}>Likes obtenidos: {user?.likesAmount}</p>
+                        <p className={"fw-medium"}>Likes obtenidos: {user?.likesAmount}</p>*/}
                     </div>
 
                     <div className={"d-flex flex-row justify-content-center gap-2 w-100"}>

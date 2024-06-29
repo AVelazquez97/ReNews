@@ -41,10 +41,10 @@ export const LOGIN_DATA_INITIAL_STATE = {
     email: "",
     password: "",
     name: "",
-    surname: "",
+    lastname: "",
     username: "",
     password_repeat: "",
-    profile_image: "",
+    profileImage: "",
 }
 
 export const POST_DATA_INITIAL_STATE = { ownerId: "", username: "", title: "", body: "", tags: [], date: ""}
