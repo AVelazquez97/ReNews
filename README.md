@@ -241,6 +241,15 @@ This is a university project for RIA and PHP. Subjects that are part of the curr
      isAdmin BOOLEAN DEFAULT FALSE
      );
      ```
+     
+   - Tags table:
+     ```
+     CREATE TABLE tags (
+     id INT AUTO_INCREMENT PRIMARY KEY,
+     name VARCHAR(255) NOT NULL
+     );
+     ```     
+
 
 # 3. Downloading the project from GitHub
 

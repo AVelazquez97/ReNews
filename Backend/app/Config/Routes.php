@@ -22,10 +22,16 @@ $routes->group('api', ['filter' => 'cors:api'], ['namespace' => 'App\Controllers
     $routes->options('users', static function () {});
     $routes->options('users/(:any)', static function () {});
     /* End User Router */
+
+    /* Tag Router */
+    $routes->get('tags', 'Tags::index');
+    $routes->get('tags/(:num)', 'Tags::show/$1');
+    $routes->post('tags', 'Tags::create');
+    $routes->options('tags', static function () {});
+    $routes->options('tags/(:any)', static function () {});
+    /* End Tag Router */
+
 //    $routes->resource('posts', ['controller' => 'Posts']);
 //    $routes->resource('comments', ['controller' => 'Comments']);
-//    $routes->resource('categories', ['controller' => 'Categories']);
-//    $routes->resource('tags', ['controller' => 'Tags']);
-//    $routes->resource('postTags', ['controller' => 'PostTags']);
 
 });

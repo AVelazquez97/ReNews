@@ -15,6 +15,103 @@
         }
     ],
     "paths": {
+        "/tags": {
+            "get": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Get all tags",
+                "operationId": "5b41ac2fae94a0362485d6e51fdb2cf0",
+                "responses": {
+                    "200": {
+                        "description": "Success: Retrieved all tags",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TagOutput"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No tags found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Create a tag",
+                "operationId": "8be8d6babd9564d72a8a49b18d0c4c7b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TagInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success: Created a tag",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TagOutput"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Field name is required"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/tags/{id}": {
+            "get": {
+                "tags": [
+                    "Tags"
+                ],
+                "summary": "Get tag by id",
+                "operationId": "836d3f5ff59a83dc08011c32d831dbcb",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Retrieved tag",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TagOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No tag found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "tags": [
@@ -307,6 +404,34 @@
     },
     "components": {
         "schemas": {
+            "TagInput": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "description": "The tag's name",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TagOutput": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The tag's id",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The tag's name",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "UserInput": {
                 "required": [
                     "email",
@@ -460,5 +585,15 @@
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Tags",
+            "description": "API Endpoints of Tags"
+        },
+        {
+            "name": "Users",
+            "description": "API Endpoints of Users"
+        }
+    ]
 }
