@@ -8,9 +8,13 @@ import {
     VALIDATION_NEW_POST_FORM_INITIAL_STATE
 } from "../../const.js";
 import {notNullNotEmptyString, now, userId, userName, validateNewPostForm} from "../../utils.js";
+import SkeletonTags from "../Skeletons/SkeletonTags.jsx";
+import * as tagsController from "../../controllers/tagsController.js";
 export default function NewPostModal({onClose}){
     const [postData, setPostData] = useState(POST_DATA_INITIAL_STATE);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [tags, setTags] = useState(null);
+    const [tagsAlert,setTagsAlert] = useState({ALERT_INITIAL_STATE});
 
     const [validations,setValidations] = useState(VALIDATION_NEW_POST_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState({ALERT_INITIAL_STATE});
@@ -53,6 +57,20 @@ export default function NewPostModal({onClose}){
         validateNewPostForm(postData, selectedTags, setValidations);
     }
 
+    /* fetch the tags */
+    useEffect(() => {
+        const getTags = async () => {
+            try{
+                const tags = await tagsController.getTags();
+                setTags(tags);
+            } catch (error) {
+                setTagsAlert({visible: true, isError: true, message: error.message});
+            }
+        }
+
+        getTags();
+    }, []);
+
     return (
         <Modal show onHide={onClose}>
             <Modal.Header closeButton>
@@ -90,12 +108,16 @@ export default function NewPostModal({onClose}){
                 </form>
                 <div className={"w-100 d-flex flex-row flex-wrap gap-2"}>
                     <label htmlFor="exampleInputPassword1" className="form-label w-100">Categoria(s)</label>
-                    {FEED_GET_TAGS_PLACEHOLDER_RESPONSE.tags.map(tag => (
-                        <button className={`btn btn-sm ${selectedTags.includes(tag) ? "btn-success" : "btn-outline-success"}`} key={tag.id}
-                                onClick={() => handleTagSelection(tag)}>
-                            {tag.name}
-                        </button>
-                    ))}
+                    {tags === null ?
+                        <SkeletonTags/>
+                        :
+                        tags.map(tag => (
+                            <button className={`btn btn-sm ${selectedTags.includes(tag) ? "btn-success" : "btn-outline-success"}`} key={tag.id}
+                                    onClick={() => handleTagSelection(tag)}>
+                                {tag.name}
+                            </button>
+                        ))
+                    }
                 </div>
                 {
                     notNullNotEmptyString(validations?.minimumTagLimit?.message) &&

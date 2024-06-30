@@ -9,9 +9,11 @@ import ForgotPasswordModal from "../../components/Modals/ForgotPasswordModal.jsx
 import {useEffect, useState} from "react";
 import {notNullNotEmptyString, validateLoginForm, validateRegisterForm} from "../../utils.js";
 import * as usersController from "../../controllers/usersController.js";
+import Spinner from "../../components/Skeletons/Spinner.jsx";
 
 export default function Login({setSpaPath}){
     const [view, setView] = useState("login");
+    const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState(LOGIN_DATA_INITIAL_STATE);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false);
     const [registerValidations,setRegisterValidations] = useState(VALIDATION_REGISTER_FORM_INITIAL_STATE);
@@ -56,6 +58,7 @@ export default function Login({setSpaPath}){
             );
 
             if (!hasValidationErrors) {
+                setIsLoading(true);
                 try {
                     const data = await usersController.loginUser(formData);
                     setFormData(LOGIN_DATA_INITIAL_STATE);
@@ -69,6 +72,7 @@ export default function Login({setSpaPath}){
                 } catch (error) {
                     setAlert({visible: true,isError: true,message: error.message});
                 }
+                setIsLoading(false);
             }
         };
 
@@ -104,6 +108,7 @@ export default function Login({setSpaPath}){
 
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
+        {isLoading && <Spinner fullscreen/>}
         {isForgotPasswordModalOpen && <ForgotPasswordModal onClose={handleCloseForgotPasswordModal} isOpen={isForgotPasswordModalOpen}/>}
             <Container width={"75"}>
                 <p className={"fs-3 fw-bold"}>{view === "login" ? "Login" : "Registrarse"}</p>

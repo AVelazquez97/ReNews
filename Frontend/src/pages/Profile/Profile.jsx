@@ -17,28 +17,39 @@ import * as usersController from "../../controllers/usersController.js";
 import SkeletonUserCard from "../../components/Card/SkeletonUserCard.jsx";
 import SkeletonPostCard from "../../components/PostCard/SkeletonPostCard.jsx";
 import SkeletonProfileInfo from "../../components/Skeletons/SkeletonProfileInfo.jsx";
+import NewTag from "./NewTag.jsx";
 
 export default function Profile({setSpaPath}){
     const [profileData, setProfileData] = useState(null);
-    const [tagName, setTagName] = useState(TAG_DATA_INITIAL_STATE);
     const [ownedPosts, setOwnedPosts] = useState([]);
     const [users, setUsers] = useState(null);
     const [userAlert,setUserAlert] = useState({ALERT_INITIAL_STATE});
-    const [tagValidations,setTagValidations] = useState(VALIDATION_NEW_TAG_FORM_INITIAL_STATE);
-    const [tagAlert,setTagAlert] = useState({ALERT_INITIAL_STATE});
+
+    function updateProfileData(value, key){
+        setProfileData({...profileData, [key]: value});
+    }
+
+    function handleFileChange(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            updateProfileData(reader.result, "profile_image");
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleRedirect(){
+        setSpaPath(SPA_PATH.FEED);
+    }
 
     useEffect(() => {
-        if (tagValidations?.name?.message !== ""){
-            console.log("[PLACEHOLDER] Validation failed, please check the form for errors.");
-            setTagAlert(ALERT_INITIAL_STATE);
-        } else {
-            console.log("[PLACEHOLDER] Creating tag: ", tagName);
-            //tagController.createTag(tagData);
-            setTagAlert({visible: true, isError: false, message: "Tag creado correctamente."});
-            setTagName(TAG_DATA_INITIAL_STATE);
-        }
-    }, [tagValidations]);
-
+        //postsController.getOwnedPost(userId);
+        setOwnedPosts(JSON.parse(JSON.stringify(FEED_GET_POSTS_PLACEHOLDER_RESPONSE.posts)));
+    }, []);
 
     /* fetch the users */
     useEffect(() => {
@@ -69,40 +80,6 @@ export default function Profile({setSpaPath}){
 
         getProfile();
     }, []);
-
-    function updateProfileData(value, key){
-        setProfileData({...profileData, [key]: value});
-    }
-
-    function handleFileChange(e) {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-
-        reader.onloadend = () => {
-            updateProfileData(reader.result, "profile_image");
-        };
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function handleRedirect(){
-        setSpaPath(SPA_PATH.FEED);
-    }
-
-    useEffect(() => {
-        //postsController.getOwnedPost(userId);
-        setOwnedPosts(JSON.parse(JSON.stringify(FEED_GET_POSTS_PLACEHOLDER_RESPONSE.posts)));
-    }, []);
-
-    function handleNewTag(){
-        validateNewTagForm(tagName, setTagValidations);
-    }
-
-    function handleTagChange(value){
-        setTagName({name: value});
-    }
 
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
@@ -142,31 +119,7 @@ export default function Profile({setSpaPath}){
                     }
                 </Container>
                 {isAdmin() &&
-                    <Container width={"25"}>
-                        <p className={"fs-3 fw-bold"}> Crear nuevo tag </p>
-                        <form className={"h-100"}>
-                            <div className="mb-3">
-                                <label className="form-label">Nombre</label>
-                                <input type="text" className="form-control" value={tagName?.name}
-                                       onChange={e => handleTagChange(e.target.value)}/>
-                                {
-                                    notNullNotEmptyString(tagValidations?.name?.message) &&
-                                    <div className={`alert mt-2 alert-danger`}>
-                                        {tagValidations?.name?.message}
-                                    </div>
-                                }
-                                {
-                                    tagAlert?.visible && tagAlert?.isError === false &&
-                                    <div className={`alert mt-2 alert-success`}>
-                                        {tagAlert?.message}
-                                    </div>
-                                }
-                            </div>
-                        </form>
-                        <div className={"d-flex justify-content-end w-100"}>
-                            <button className="btn btn-dark fw-bold" onClick={() => handleNewTag()}>Guardar</button>
-                        </div>
-                    </Container>
+                    <NewTag/>
                 }
             </div>
             <div className={"d-flex flex-row w-100"}>
