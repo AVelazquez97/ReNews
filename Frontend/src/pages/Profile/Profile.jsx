@@ -126,8 +126,8 @@ export default function Profile({setSpaPath}){
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Apellido</label>
-                                    <input type="email" className="form-control" value={profileData.surname}
-                                           onChange={e => updateProfileData(e.target.value, "surname}")}/>
+                                    <input type="email" className="form-control" value={profileData.lastname}
+                                           onChange={e => updateProfileData(e.target.value, "lastname}")}/>
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label">Username</label>
