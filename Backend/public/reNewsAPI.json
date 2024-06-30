@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "ReNewsAPI",
-        "version": "1.0.0"
+        "version": "1.4"
     },
     "servers": [
         {
@@ -91,7 +91,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/UserInput"
+                                "$ref": "#/components/schemas/UserUpdateInput"
                             }
                         }
                     }
@@ -112,6 +112,9 @@
                     },
                     "404": {
                         "description": "User not found"
+                    },
+                    "409": {
+                        "description": "Username or email already exists"
                     },
                     "500": {
                         "description": "An error occurred"
@@ -257,6 +260,41 @@
                     "200": {
                         "description": "Success: New password email sent"
                     },
+                    "400": {
+                        "description": "Invalid user data"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/users/makeAdmin/{id}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Make a user admin",
+                "operationId": "13140ddf61282071dba17ec63000f321",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: User made admin",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserAdminOutput"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "User not found"
                     },
@@ -275,8 +313,7 @@
                     "password",
                     "name",
                     "lastname",
-                    "username",
-                    "isAdmin"
+                    "username"
                 ],
                 "properties": {
                     "id": {
@@ -345,6 +382,63 @@
                     },
                     "profileImage": {
                         "description": "The user's profile image",
+                        "type": "string"
+                    },
+                    "isAdmin": {
+                        "description": "Whether the user is an admin",
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "UserUpdateInput": {
+                "required": [
+                    "name",
+                    "lastname",
+                    "username"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The user's id",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The user's name",
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "description": "The user's lastname",
+                        "type": "string"
+                    },
+                    "username": {
+                        "description": "The user's username",
+                        "type": "string"
+                    },
+                    "profileImage": {
+                        "description": "The user's profile image",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserAdminOutput": {
+                "required": [
+                    "id",
+                    "username",
+                    "email",
+                    "isAdmin"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The user's id",
+                        "type": "integer"
+                    },
+                    "username": {
+                        "description": "The user's username",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "The user's email",
                         "type": "string"
                     },
                     "isAdmin": {

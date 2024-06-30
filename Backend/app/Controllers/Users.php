@@ -5,11 +5,12 @@ namespace App\Controllers;
 use App\Models\UserModel;
 use App\Services\EmailService;
 use CodeIgniter\API\ResponseTrait;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Info(title="ReNewsAPI", version="1.0.0")
+ * @OA\Info(title="ReNewsAPI", version="1.4")
  * @OA\Server(
  *      url="https://api.renews.alexisvelazquez.tech/api",
  *      description="Production Server"
@@ -31,7 +32,6 @@ use OpenApi\Annotations as OA;
  */
 class Users extends ResourceController {
     use ResponseTrait;
-
     private $userModel;
 
     public function __construct() {
@@ -101,7 +101,7 @@ class Users extends ResourceController {
      */
     public function show($id = null) {
         try {
-            $data = $this->findUser($id);
+            $data = $this->userModel->findUser($id);
 
             if (!$data) {
                 return $this->failNotFound('No Data Found with id ' . $id);
@@ -151,7 +151,7 @@ class Users extends ResourceController {
      *     )
      * )
      */
-    public function login() {
+    public function login(): ResponseInterface  {
         try {
             $data = $this->request->getJSON(true);
             $user = $this->userModel->getUserByUsernameOrEmail($data['usernameOrEmail']);
@@ -192,11 +192,16 @@ class Users extends ResourceController {
      *     )
      * )
      */
-    public function register() {
+    public function register(): ResponseInterface {
         try {
             $data = $this->request->getJSON(true);
 
-            if ($this->doesUserExist($data['username'], $data['email'])) {
+            // Verifica si los campos están presentes en los datos de la solicitud
+            $requiredFields = ['email', 'password', 'name', 'lastname', 'username'];
+            $validation = $this->validateFields($data, $requiredFields);
+            if ($validation !== true) { return $validation; }
+
+            if ($this->userModel->doesUserExist($data['username'], $data['email'])) {
                 return $this->fail('Username or email already exists', 409);
             }
 
@@ -206,7 +211,7 @@ class Users extends ResourceController {
             $insertedId = $this->userModel->insert($data);
             $data['id'] = $insertedId;
             unset($data['password']);
-            return $this->respondCreated($data, 'User Created');
+            return $this->respondCreated($data, 'User Registered');
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
         }
@@ -233,6 +238,10 @@ class Users extends ResourceController {
      *         description="Success: New password email sent"
      *     ),
      *     @OA\Response(
+     *          response=400,
+     *          description="Invalid user data"
+     *      ),
+     *     @OA\Response(
      *         response=404,
      *         description="User not found"
      *     ),
@@ -242,29 +251,70 @@ class Users extends ResourceController {
      *     )
      * )
      */
-    public function forgotPassword() {
+    public function forgotPassword(): ResponseInterface  {
         try {
-            $email = $this->request->getJSON(true)['email'];
+            $email = $this->request->getJSON(true);
+
+            if (!isset($email['email'])) {
+                return $this->fail('Field email is required', 400);
+            }
+
+
             $user = $this->userModel->getUserByEmail($email);
 
             if (!$user) {
                 return $this->failNotFound('No User Found with email ' . $email);
             }
 
-            /* 1. Genera una contraseña aleatoria
-             * 2. La hashea
-             * 3. La guarda en la base de datos
-            */
-            $newGeneratedPassword = bin2hex(random_bytes(5));
+            /*
+             * Generating a new hashed password and sending it to the user via email
+             */
+            $newGeneratedPassword = $this->userModel->generateRandomPassword();
             $hashedPassword = $this->userModel->hashPassword($newGeneratedPassword);
             $this->userModel->update($user['id'], ['password' => $hashedPassword]);
-
-            // log_message('info', 'New password generated: ' . $newGeneratedPassword);
-
             $emailService = new EmailService();
             $emailService->sendNewPasswordEmail($email, $newGeneratedPassword);
 
             return $this->respond('New password email sent');
+        } catch (\Exception $e) {
+            return $this->failServerError('An error occurred: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/users/makeAdmin/{id}",
+     *     tags={"Users"},
+     *     summary="Make a user admin",
+     *     @OA\Parameter(ref="#/components/parameters/id"),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: User made admin",
+     *         @OA\JsonContent(ref="#/components/schemas/UserAdminOutput")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
+    public function makeAdmin($id = null): ResponseInterface {
+        try {
+            $user = $this->userModel->findUser($id);
+            if (!$user) { return $this->failNotFound('No Data Found with id ' . $id); }
+
+            $this->userModel->makeAdmin($id);
+            $response = [
+                'id' => intval($user['id']),
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'isAdmin' => true
+            ];
+            return $this->respond($response, 200,'User made admin');
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
         }
@@ -277,7 +327,7 @@ class Users extends ResourceController {
      *     summary="Update a user",
      *     @OA\Parameter(ref="#/components/parameters/id"),
      *     @OA\RequestBody(
-     *         @OA\JsonContent(ref="#/components/schemas/UserInput")
+     *         @OA\JsonContent(ref="#/components/schemas/UserUpdateInput")
      *     ),
      *     @OA\Response(
      *         response=200,
@@ -293,6 +343,10 @@ class Users extends ResourceController {
      *         description="User not found"
      *     ),
      *     @OA\Response(
+     *          response=409,
+     *          description="Username or email already exists"
+     *      ),
+     *     @OA\Response(
      *         response=500,
      *         description="An error occurred"
      *     )
@@ -301,18 +355,21 @@ class Users extends ResourceController {
     public function update($id = null) {
         try {
             $data = $this->request->getJSON(true);
+            $user = $this->userModel->findUser($id);
+            if (!$user) { return $this->failNotFound('No Data Found with id ' . $id); }
 
-            if (!$this->findUser($id)) {
-                return $this->failNotFound('No Data Found with id ' . $id);
-            }
+            $requiredFields = ['name', 'username', 'lastname'];
+            $validation = $this->validateFields($data, $requiredFields);
+            if ($validation !== true) { return $validation; }
 
-            if (isset($data['password'])) {
-                $data['password'] = $this->userModel->hashPassword($data['password']);
+            if ($data['username'] !== $user['username'] &&
+                $this->userModel->doesUserExist($data['username'], null)) {
+                return $this->fail('Username already exists', 409);
             }
 
             $this->userModel->update($id, $data);
             unset($data['password']);
-            return $this->respond($data, 'Data Updated');
+            return $this->respond($data, 200,'Data Updated');
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
         }
@@ -340,7 +397,7 @@ class Users extends ResourceController {
      */
     public function delete($id = null) {
         try {
-            if (!$data = $this->findUser($id)) {
+            if (!$this->userModel->findUser($id)) {
                 return $this->failNotFound('No User Found with id ' . $id);
             }
 
@@ -351,12 +408,12 @@ class Users extends ResourceController {
         }
     }
 
-    private function doesUserExist($username, $email): bool {
-        return $this->userModel->doesUserExist($username, $email);
+    private function validateFields($dataFields, $requiredFields): bool | ResponseInterface {
+        foreach ($requiredFields as $field) {
+            if (!isset($dataFields[$field])) {
+                return $this->fail('Field ' . $field . ' is required', 400);
+            }
+        }
+        return true;
     }
-
-    private function findUser($id) {
-        return $this->userModel->findUser($id);
-    }
-    // login user
 }

@@ -12,12 +12,13 @@ $routes->get('/docs', 'Docs::index');
 $routes->group('api', ['filter' => 'cors:api'], ['namespace' => 'App\Controllers'], function($routes) {
     /* User Router */
     $routes->get('users', 'Users::index');
-    $routes->get('users/(:any)', 'Users::show/$1');
+    $routes->get('users/(:num)', 'Users::show/$1');
     $routes->post('users/login', 'Users::login');
     $routes->post('users/register', 'Users::register');
     $routes->post('users/forgotPassword', 'Users::forgotPassword');
-    $routes->put('users/(:any)', 'Users::update/$1');
-    $routes->delete('users/(:any)', 'Users::delete/$1');
+    $routes->put('users/makeAdmin/(:num)', 'Users::makeAdmin/$1');
+    $routes->put('users/(:num)', 'Users::update/$1');
+    $routes->delete('users/(:num)', 'Users::delete/$1');
     $routes->options('users', static function () {});
     $routes->options('users/(:any)', static function () {});
     /* End User Router */

@@ -8,7 +8,7 @@ use OpenApi\Annotations as OA;
 /**
  * @OA\Schema(
  *     schema="UserInput",
- *     required={"email", "password", "name", "lastname", "username", "isAdmin"},
+ *     required={"email", "password", "name", "lastname", "username"},
  *     @OA\Property(
  *         property="id",
  *         type="integer",
@@ -90,11 +90,70 @@ use OpenApi\Annotations as OA;
  *         description="Whether the user is an admin"
  *     )
  * )
+ *
+ * @OA\Schema(
+ *      schema="UserUpdateInput",
+ *      required={"name", "lastname", "username"},
+ *      @OA\Property(
+ *          property="id",
+ *          type="integer",
+ *          description="The user's id"
+ *      ),
+ *      @OA\Property(
+ *          property="name",
+ *          type="string",
+ *          description="The user's name"
+ *      ),
+ *      @OA\Property(
+ *          property="lastname",
+ *          type="string",
+ *          description="The user's lastname"
+ *      ),
+ *      @OA\Property(
+ *          property="username",
+ *          type="string",
+ *          description="The user's username"
+ *      ),
+ *      @OA\Property(
+ *          property="profileImage",
+ *          type="string",
+ *          description="The user's profile image"
+ *      )
+ * )
+ *
+ * @OA\Schema(
+ *      schema="UserAdminOutput",
+ *      required={"id", "username", "email", "isAdmin"},
+ *      @OA\Property(
+ *          property="id",
+ *          type="integer",
+ *          description="The user's id"
+ *      ),
+ *      @OA\Property(
+ *          property="username",
+ *          type="string",
+ *          description="The user's username"
+ *      ),
+ *      @OA\Property(
+ *          property="email",
+ *          type="string",
+ *          description="The user's email"
+ *      ),
+ *      @OA\Property(
+ *          property="isAdmin",
+ *          type="boolean",
+ *          description="Whether the user is an admin"
+ *      )
+ *  )
  */
 class UserModel extends Model {
     protected $table = 'users';
     protected $primaryKey = 'id';
     protected $allowedFields = ['email', 'password', 'name', 'lastname', 'username', 'profileImage', 'isAdmin'];
+
+    public function makeAdmin($id) {
+        return $this->update($id, ['isAdmin' => 1]);
+    }
 
     public function doesUserExist($username, $email): bool {
         $user = $this->where('username', $username)->orWhere('email', $email)->first();
@@ -109,6 +168,10 @@ class UserModel extends Model {
         return $this->where('email', $email)->first();
     }
 
+    public function getUserByUsername($username) {
+        return $this->where('username', $username)->first();
+    }
+
     public function getUserByUsernameOrEmail($usernameOrEmail) {
         return $this->where('username', $usernameOrEmail)->orWhere('email', $usernameOrEmail)->first();
     }
@@ -119,6 +182,10 @@ class UserModel extends Model {
 
     public function verifyPassword($password, $hash) {
         return password_verify($password, $hash);
+    }
+
+    public function generateRandomPassword() {
+        return bin2hex(random_bytes(5));
     }
 
 //    // One-to-many relationship with Comment
