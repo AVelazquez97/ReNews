@@ -149,6 +149,7 @@ use OpenApi\Annotations as OA;
 class UserModel extends Model {
     protected $table = 'users';
     protected $primaryKey = 'id';
+    protected $useAutoIncrement = true;
     protected $allowedFields = ['email', 'password', 'name', 'lastname', 'username', 'profileImage', 'isAdmin'];
 
     public function makeAdmin($id) {

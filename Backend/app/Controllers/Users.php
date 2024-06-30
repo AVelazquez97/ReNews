@@ -10,24 +10,9 @@ use CodeIgniter\RESTful\ResourceController;
 use OpenApi\Annotations as OA;
 
 /**
- * @OA\Info(title="ReNewsAPI", version="1.4")
- * @OA\Server(
- *      url="https://api.renews.alexisvelazquez.tech/api",
- *      description="Production Server"
- *  )
- * @OA\Server(
- *     url="http://localhost:8080/api",
- *     description="Development Server"
- * )
- * @OA\Parameter(
- *     parameter="id",
- *     in="path",
- *     name="id",
- *     required=true,
- *     @OA\Schema(
- *         type="integer"
- *     ),
- *     description="The id of the user"
+ * @OA\Tag(
+ *     name="Users",
+ *     description="API Endpoints of Users"
  * )
  */
 class Users extends ResourceController {
@@ -109,6 +94,7 @@ class Users extends ResourceController {
 
             $data['id'] = intval($data['id']);
             $data['isAdmin'] = filter_var($data['isAdmin'], FILTER_VALIDATE_BOOLEAN);
+            unset($data['password']);
             return $this->respond($data);
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
@@ -208,8 +194,11 @@ class Users extends ResourceController {
             $data['password'] = $this->userModel->hashPassword($data['password']);
             $data['isAdmin'] = filter_var($data['isAdmin'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
 
+
+            // TODO: Handle image upload and save the path in the database
             $insertedId = $this->userModel->insert($data);
-            $data['id'] = $insertedId;
+            $data['id'] = intval($insertedId);
+            $data['isAdmin'] = filter_var($data['isAdmin'], FILTER_VALIDATE_BOOLEAN);
             unset($data['password']);
             return $this->respondCreated($data, 'User Registered');
         } catch (\Exception $e) {
@@ -367,6 +356,7 @@ class Users extends ResourceController {
                 return $this->fail('Username already exists', 409);
             }
 
+            // TODO: Handle image upload and save the path in the database
             $this->userModel->update($id, $data);
             unset($data['password']);
             return $this->respond($data, 200,'Data Updated');
