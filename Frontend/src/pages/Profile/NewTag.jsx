@@ -25,6 +25,7 @@ export default function NewTag(){
 
     /* check the validations and try to create the tag */
     useEffect(() => {
+        setAlert(ALERT_INITIAL_STATE);
         const createTag = async () => {
             setIsLoading(true);
             const hasValidationErrors = Object.values(validations).some(

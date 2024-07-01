@@ -108,7 +108,7 @@ export default function Login({setSpaPath}){
 
     return (
         <div className={"flex-grow-1 d-flex flex-column w-100 h-100 align-items-center pageContent overflow-y-scroll"}>
-        {isLoading && <Spinner fullscreen/>}
+        {isLoading && <Spinner/>}
         {isForgotPasswordModalOpen && <ForgotPasswordModal onClose={handleCloseForgotPasswordModal} isOpen={isForgotPasswordModalOpen}/>}
             <Container width={"75"}>
                 <p className={"fs-3 fw-bold"}>{view === "login" ? "Login" : "Registrarse"}</p>

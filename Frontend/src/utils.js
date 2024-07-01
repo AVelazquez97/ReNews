@@ -164,3 +164,23 @@ export function validateNewTagForm(tagData, setValidations) {
         setValidations(prevState => ({...prevState, name: {message: ""}}));
     }
 }
+
+export function validateProfileInfoForm(data, setValidations) {
+    if (!validateUsername(data.name)) {
+        setValidations(prevState => ({...prevState, name: {message: "El nombre debe tener al menos 3 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, name: {message: ""}}));
+    }
+
+    if (!validateUsername(data.lastname)) {
+        setValidations(prevState => ({...prevState, lastname: {message: "El apellido debe tener al menos 3 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, lastname: {message: ""}}));
+    }
+
+    if (!validateUsername(data.username)) {
+        setValidations(prevState => ({...prevState, username: {message: "El nombre de usuario debe tener al menos 3 caracteres de largo."}}));
+    } else {
+        setValidations(prevState => ({...prevState, username: {message: ""}}));
+    }
+}

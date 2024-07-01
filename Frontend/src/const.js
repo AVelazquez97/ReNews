@@ -101,3 +101,9 @@ export const VALIDATION_NEW_TAG_FORM_INITIAL_STATE = {
     name: {message: null},
 }
 
+export const VALIDATION_PROFILE_INFO_FORM_INITIAL_STATE = {
+    name: {message: null},
+    lastname: {message: null},
+    username: {message: null},
+}
+
