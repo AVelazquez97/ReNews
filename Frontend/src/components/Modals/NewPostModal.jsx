@@ -10,29 +10,17 @@ import {
 import {notNullNotEmptyString, now, userId, userName, validateNewPostForm} from "../../utils.js";
 import SkeletonTags from "../Skeletons/SkeletonTags.jsx";
 import * as tagsController from "../../controllers/tagsController.js";
+import * as postController from "../../controllers/postsController.js";
+import Spinner from "../Skeletons/Spinner.jsx";
 export default function NewPostModal({onClose}){
     const [postData, setPostData] = useState(POST_DATA_INITIAL_STATE);
     const [selectedTags, setSelectedTags] = useState([]);
     const [tags, setTags] = useState(null);
     const [tagsAlert,setTagsAlert] = useState({ALERT_INITIAL_STATE});
+    const [isLoading, setIsLoading] = useState(false);
 
     const [validations,setValidations] = useState(VALIDATION_NEW_POST_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState({ALERT_INITIAL_STATE});
-
-    useEffect(() => {
-        if(validations?.title?.message !== "" ||
-            validations?.body?.message !== "" ||
-            validations?.minimumTagLimit?.message !== "" ||
-            validations?.maximumTagLimit?.message !== ""){
-            console.log("[PLACEHOLDER] Validation failed, please check the form for errors.");
-        } else {
-            console.log("[PLACEHOLDER] Creating post: ", postData);
-            //postController.createPost(postData);
-            setAlert({visible: true, isError: false, message: "Post creado correctamente."});
-            setPostData(POST_DATA_INITIAL_STATE);
-            setSelectedTags([]);
-        }
-    }, [validations]);
 
     function updatePostData(value, key){
         setPostData({...postData, [key]: value});
@@ -57,6 +45,31 @@ export default function NewPostModal({onClose}){
         validateNewPostForm(postData, selectedTags, setValidations);
     }
 
+    /* check the validations and try to create the post*/
+    useEffect(() => {
+        setAlert(ALERT_INITIAL_STATE);
+        const createPost = async () => {
+            setIsLoading(true);
+            const hasValidationErrors = Object.values(validations).some(
+                validation => validation?.message !== ""
+            );
+
+            if (!hasValidationErrors) {
+                try {
+                    await postController.createPost(postData);
+                    setAlert({visible: true, isError: false, message: "Post creado correctamente."});
+                    setPostData(POST_DATA_INITIAL_STATE);
+                    setSelectedTags([]);
+                } catch (error) {
+                    setAlert({visible: true, isError: true, message: "Error al crear el post. Intente de nuevo."});
+                }
+            }
+            setIsLoading(false);
+        }
+
+        createPost();
+    }, [validations]);
+
     /* fetch the tags */
     useEffect(() => {
         const getTags = async () => {
@@ -73,6 +86,7 @@ export default function NewPostModal({onClose}){
 
     return (
         <Modal show onHide={onClose}>
+            {isLoading && <Spinner/>}
             <Modal.Header closeButton>
                 <Modal.Title className={"fw-bold"}>Nuevo post</Modal.Title>
             </Modal.Header>

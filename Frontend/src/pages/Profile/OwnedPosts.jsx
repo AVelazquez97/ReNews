@@ -1,10 +1,11 @@
 import PostCard from "../../components/PostCard/PostCard.jsx";
 import Container from "../../components/Container/Container.jsx";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ALERT_INITIAL_STATE, SPA_PATH} from "../../const.js";
 import * as postsController from "../../controllers/postsController.js";
 import {userId} from "../../utils.js";
 import SkeletonPostCard from "../../components/PostCard/SkeletonPostCard.jsx";
+import {FEED_GET_POSTS_PLACEHOLDER_RESPONSE} from "../../placeholderResponses.js";
 
 export default function OwnedPosts({setSpaPath}){
     const [ownedPosts, setOwnedPosts] = useState(null);
@@ -18,8 +19,9 @@ export default function OwnedPosts({setSpaPath}){
     useEffect(() => {
         const getOwnedPosts = async () => {
             try{
-                const posts = await postsController.getOwnedPosts(userId());
-                setOwnedPosts(posts);
+                setOwnedPosts(JSON.parse(JSON.stringify(FEED_GET_POSTS_PLACEHOLDER_RESPONSE.posts)));
+                //const posts = await postsController.getOwnedPosts(userId());
+                //setOwnedPosts(posts);
             } catch (error) {
                 setAlert({visible: true, isError: true, message: "Error al obtener los posts. Intente de nuevo."});
             }
@@ -36,19 +38,25 @@ export default function OwnedPosts({setSpaPath}){
                 <SkeletonPostCard/>
             </Container>
         :
-        <Container justifyContent={"start"} gap={"2"} width={"100"}>
-            {ownedPosts.length === 0 &&
-                <>
-                    <p className={"fs-3 fw-bold"}> Aún no has creado posts, viaja a tu feed para obtener algo de inspiración! </p>
-                    <button className={"btn btn-primary fw-bold"} onClick={() => handleRedirect()}>Ir al Feed</button>
-                </>
-            }
-            {ownedPosts.map(post => {
-                return (
-                    <PostCard key={post?.id} post={post}
-                              width={"100"}/>
-                )
-            })}
-        </Container>
+            <Container justifyContent={"start"} gap={"2"} width={"100"}>
+                {
+                    alert?.visible && alert?.isError === false &&
+                    <div className={`alert mt-2 alert-success`}>
+                        {alert?.message}
+                    </div>
+                }
+                {ownedPosts.length === 0 &&
+                    <>
+                        <p className={"fs-3 fw-bold"}> Aún no has creado posts, viaja a tu feed para obtener algo de inspiración! </p>
+                        <button className={"btn btn-primary fw-bold"} onClick={() => handleRedirect()}>Ir al Feed</button>
+                    </>
+                }
+                {ownedPosts.map(post => {
+                    return (
+                        <PostCard key={post?.id} post={post}
+                                  width={"100"}/>
+                    )
+                })}
+            </Container>
     )
 }

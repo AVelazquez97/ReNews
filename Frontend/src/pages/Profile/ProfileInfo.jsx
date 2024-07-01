@@ -35,7 +35,7 @@ export default function ProfileInfo(){
 
     /* check the validations and try to update the users info */
     useEffect(() => {
-        setAlert()
+        setAlert(ALERT_INITIAL_STATE);
         const updateUser = async () => {
             setIsLoading(true);
             const hasValidationErrors = Object.values(validation).some(
@@ -75,7 +75,6 @@ export default function ProfileInfo(){
         :
             <Container width={"100"} position={"position-relative"}>
             {isLoading && <Spinner/>}
-
                 <p className={"fs-3 fw-bold"}> Perfil </p>
                     <form className={"text-start"}>
                         <div className="mb-3">

@@ -16,3 +16,48 @@ export const getOwnedPosts = async (userId) => {
         }
     }
 }
+
+export const getPosts = async () => {
+    try{
+        const response = await axios.get(controllerPath);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
+        } else if (error.request) {
+            throw new Error('No se recibió respuesta del servidor');
+        } else {
+            throw new Error('Error al configurar la petición');
+        }
+    }
+}
+
+export const createPost = async (postData) => {
+    try{
+        const response = await axios.post(controllerPath, postData);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
+        } else if (error.request) {
+            throw new Error('No se recibió respuesta del servidor');
+        } else {
+            throw new Error('Error al configurar la petición');
+        }
+    }
+}
+
+export const searchPosts = async (search) => {
+    try{
+        const response = await axios.get(`${controllerPath}${search}`);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
+        } else if (error.request) {
+            throw new Error('No se recibió respuesta del servidor');
+        } else {
+            throw new Error('Error al configurar la petición');
+        }
+    }
+}
