@@ -2,24 +2,49 @@ import ConfirmationModal from "../Modals/ConfirmationModal.jsx";
 import {useState} from "react";
 import {ALERT_INITIAL_STATE} from "../../const.js";
 import * as usersController from "../../controllers/usersController.js";
+import Spinner from "../Skeletons/Spinner.jsx";
 
 export default function UserCard({user}){
     const [confirmationModal, setConfirmationModal] = useState({visible: false, message: ""});
     const [confirmationModalFunction, setConfirmationModalFunction] = useState(null);
     const [alert,setAlert] = useState({ALERT_INITIAL_STATE});
+    const [isLoading, setIsLoading] = useState(false);
+
+    //console.log(user.id, user.isAdmin, user.username);
 
     async function handleDeleteUser(){
+        setIsLoading(true);
         try{
             await usersController.deleteUser(user?.id);
             setAlert({visible: true, isError: false, message: "Usuario eliminado correctamente."});
         } catch (error) {
             setAlert({visible: true, isError: true, message: error.message});
         }
+        setIsLoading(false);
     }
 
-    function handleConfirmationModal(){
-        setConfirmationModal({visible: true, message: "¿Seguro que desea eliminar este usuario?"});
-        setConfirmationModalFunction(() => handleDeleteUser);
+    async function handleElevateUser(){
+        setIsLoading(true);
+        try{
+            await usersController.elevateUser(user?.id);
+            setAlert({visible: true, isError: false, message: "Usuario convertido en administrador correctamente."});
+        } catch (error) {
+            setAlert({visible: true, isError: true, message: "Error al convertir usuario en administrador. Intente de nuevo."});
+        }
+        setIsLoading(false);
+    }
+
+    function handleConfirmationModal(caseType){
+        switch (caseType){
+            case "delete":
+                setConfirmationModal({visible: true, message: "¿Seguro que desea eliminar este usuario?"});
+                setConfirmationModalFunction(() => handleDeleteUser);
+                break;
+            case "elevate":
+                setConfirmationModal({visible: true, message: "¿Seguro que desea convertir este usuario en administrador?"});
+                setConfirmationModalFunction(() => handleElevateUser);
+                break;
+        }
     }
 
     return (
@@ -34,8 +59,9 @@ export default function UserCard({user}){
                 {alert.message}
             </div>
             :
-            <div className={"card p-2 w-100 d-flex flex-row align-items-center justify-content-between"}>
-                <div className={"w-100"}>
+            <div className={"card w-100 d-flex flex-row align-items-center justify-content-between"}>
+                {isLoading && <Spinner/>}
+                <div className={"w-100 p-2"}>
                     <div className={"d-flex flex-column justify-content-start align-items-center"}>
                         <img width={25} height={25} alt={"avatar"} src={"./default-profile-picture.jpg"}
                              className={"rounded-circle m-2"}/>
@@ -52,9 +78,11 @@ export default function UserCard({user}){
 
                         <div className={"d-flex flex-row justify-content-center gap-2 w-100"}>
                             <button className={"btn btn-danger fw-bold w-100"}
-                                    onClick={() => handleConfirmationModal()}>Eliminar usuario
+                                    onClick={() => handleConfirmationModal("delete")}>Eliminar usuario
                             </button>
-                            <button className={"btn btn-primary fw-bold w-100"}>Convertir en admin</button>
+                            {user?.isAdmin === false &&
+                                <button className={"btn btn-primary fw-bold w-100"} onClick={() => handleConfirmationModal("elevate")}>Convertir en admin</button>
+                            }
                         </div>
 
                     </div>
