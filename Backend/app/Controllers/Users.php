@@ -282,6 +282,10 @@ class Users extends ResourceController {
      *         @OA\JsonContent(ref="#/components/schemas/UserAdminOutput")
      *     ),
      *     @OA\Response(
+     *         response=400,
+     *         description="User is already an admin",
+     *     ),
+     *     @OA\Response(
      *         response=404,
      *         description="User not found"
      *     ),
@@ -296,10 +300,11 @@ class Users extends ResourceController {
             $user = $this->userModel->findUser($id);
 
             // TODO:
-            //  - Verify if the user is already an admin
             //  - Verify if the user that is making the request is an admin
 
             if (!$user) { return $this->failNotFound('No Data Found with id ' . $id); }
+
+            if ($user['isAdmin']) { return $this->fail('User is already an admin', 400); }
 
             $this->userModel->makeAdmin($id);
             $response = [

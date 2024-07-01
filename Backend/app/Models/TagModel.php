@@ -36,4 +36,8 @@ class TagModel extends Model {
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $allowedFields = ['name'];
+
+    public function doesTagExist($tagName) {
+        return $this->where('name', $tagName)->first() !== null;
+    }
 }

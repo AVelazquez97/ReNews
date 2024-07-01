@@ -15,6 +15,217 @@
         }
     ],
     "paths": {
+        "/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get all posts",
+                "operationId": "d315585cf5a27a04489f8656827303fe",
+                "responses": {
+                    "200": {
+                        "description": "Success: Retrieved all posts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostOutput"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No posts found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Create a new post",
+                "operationId": "f76ba79bab61540e26dc207c8eddd9c7",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Success: Post created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostOutputWithoutComments"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid post data"
+                    },
+                    "409": {
+                        "description": "A post with this title already exists"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/posts/pending": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get all pending posts",
+                "operationId": "2e4ffebee9006d6bd51eb27adc516d3f",
+                "responses": {
+                    "200": {
+                        "description": "Success: Retrieved all pending posts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostOutput"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No pending posts found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/posts/{id}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get a post by id",
+                "operationId": "31d461bdf90341d8563f7ea4a8066a70",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the post",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Post found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostOutput"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Post not found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Delete a post",
+                "operationId": "962f3387e622836aa0da015a3f95ccc5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the post to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success: Post deleted"
+                    },
+                    "404": {
+                        "description": "Post not found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/posts/approve/{id}": {
+            "put": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Approve a pending post",
+                "operationId": "008196deebd9503085833c44e446e911",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The id of the post to approve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Post approved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "The approved post's id",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Post is already approved"
+                    },
+                    "404": {
+                        "description": "Post not found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
         "/tags": {
             "get": {
                 "tags": [
@@ -73,6 +284,9 @@
                     },
                     "400": {
                         "description": "Field name is required"
+                    },
+                    "409": {
+                        "description": "A tag with this name already exists"
                     },
                     "500": {
                         "description": "An error occurred"
@@ -392,6 +606,9 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "User is already an admin"
+                    },
                     "404": {
                         "description": "User not found"
                     },
@@ -404,6 +621,243 @@
     },
     "components": {
         "schemas": {
+            "CommentInput": {
+                "required": [
+                    "body",
+                    "postId",
+                    "ownerId",
+                    "date"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The comment's id",
+                        "type": "integer"
+                    },
+                    "body": {
+                        "description": "The comment's body",
+                        "type": "string"
+                    },
+                    "postId": {
+                        "description": "The id of the post the comment is associated with",
+                        "type": "integer"
+                    },
+                    "ownerId": {
+                        "description": "The id of the user who made the comment",
+                        "type": "integer"
+                    },
+                    "date": {
+                        "description": "The date the comment was created",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CommentOutput": {
+                "required": [
+                    "id",
+                    "body",
+                    "postId",
+                    "date"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The comment's id",
+                        "type": "integer"
+                    },
+                    "body": {
+                        "description": "The comment's body",
+                        "type": "string"
+                    },
+                    "postId": {
+                        "description": "The id of the post the comment is associated with",
+                        "type": "integer"
+                    },
+                    "owner": {
+                        "description": "The user who made the comment",
+                        "properties": {
+                            "id": {
+                                "description": "The user's id",
+                                "type": "integer"
+                            },
+                            "username": {
+                                "description": "The user's username",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "date": {
+                        "description": "The date the comment was created",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "PostInput": {
+                "required": [
+                    "ownerId",
+                    "title",
+                    "body",
+                    "date"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The post's id",
+                        "type": "integer"
+                    },
+                    "ownerId": {
+                        "description": "The id of the user who owns the post",
+                        "type": "integer"
+                    },
+                    "title": {
+                        "description": "The post's title",
+                        "type": "string"
+                    },
+                    "body": {
+                        "description": "The post's body",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "The date the post was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "tags": {
+                        "description": "The tags associated with the post",
+                        "type": "array",
+                        "items": {
+                            "description": "The tag's id",
+                            "type": "integer"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PostOutput": {
+                "required": [
+                    "id",
+                    "ownerId",
+                    "title",
+                    "body",
+                    "date"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The post's id",
+                        "type": "integer"
+                    },
+                    "owner": {
+                        "description": "The user who owns the post",
+                        "properties": {
+                            "id": {
+                                "description": "The user's id",
+                                "type": "integer"
+                            },
+                            "username": {
+                                "description": "The user's username",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "title": {
+                        "description": "The post's title",
+                        "type": "string"
+                    },
+                    "body": {
+                        "description": "The post's body",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "The date the post was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "likes": {
+                        "description": "The number of likes the post has received",
+                        "type": "integer"
+                    },
+                    "isPending": {
+                        "description": "Whether the post is pending approval",
+                        "type": "boolean"
+                    },
+                    "tags": {
+                        "description": "The tags associated with the post",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TagOutput"
+                        }
+                    },
+                    "comments": {
+                        "description": "The comments on the post",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CommentOutput"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PostOutputWithoutComments": {
+                "required": [
+                    "id",
+                    "ownerId",
+                    "title",
+                    "body",
+                    "date"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "The post's id",
+                        "type": "integer"
+                    },
+                    "owner": {
+                        "description": "The user who owns the post",
+                        "properties": {
+                            "id": {
+                                "description": "The user's id",
+                                "type": "integer"
+                            },
+                            "username": {
+                                "description": "The user's username",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "title": {
+                        "description": "The post's title",
+                        "type": "string"
+                    },
+                    "body": {
+                        "description": "The post's body",
+                        "type": "string"
+                    },
+                    "date": {
+                        "description": "The date the post was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "likes": {
+                        "description": "The number of likes the post has received",
+                        "type": "integer"
+                    },
+                    "isPending": {
+                        "description": "Whether the post is pending approval",
+                        "type": "boolean"
+                    },
+                    "tags": {
+                        "description": "The tags associated with the post",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TagOutput"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "TagInput": {
                 "required": [
                     "name"

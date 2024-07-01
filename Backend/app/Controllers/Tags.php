@@ -114,6 +114,10 @@ class Tags extends ResourceController {
      *          description="Field name is required"
      *      ),
      *      @OA\Response(
+     *           response=409,
+     *           description="A tag with this name already exists"
+     *      ),
+     *      @OA\Response(
      *          response=500,
      *          description="An error occurred"
      *      )
@@ -125,6 +129,10 @@ class Tags extends ResourceController {
 
             if (!isset($data['name'])) {
                 return $this->fail('Field name is required', 400);
+            }
+
+            if ($this->tagModel->doesTagExist($data['name'])) {
+                return $this->fail('A tag with this name already exists', 409);
             }
 
             $insertedId = $this->tagModel->insert($data);

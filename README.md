@@ -231,25 +231,76 @@ This is a university project for RIA and PHP. Subjects that are part of the curr
    - Users table:
      ```
      CREATE TABLE users (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     email VARCHAR(255) NOT NULL,
-     password VARCHAR(255) NOT NULL,
-     name VARCHAR(255) NOT NULL,
-     lastname VARCHAR(255) NOT NULL,
-     username VARCHAR(255) NOT NULL,
-     profileImage VARCHAR(255),
-     isAdmin BOOLEAN DEFAULT FALSE
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        lastname VARCHAR(255) NOT NULL,
+        username VARCHAR(255) NOT NULL,
+        profileImage VARCHAR(255),
+        isAdmin BOOLEAN DEFAULT FALSE,
+        UNIQUE KEY email (email),
+        UNIQUE KEY username (username)
      );
      ```
      
    - Tags table:
      ```
      CREATE TABLE tags (
-     id INT AUTO_INCREMENT PRIMARY KEY,
-     name VARCHAR(255) NOT NULL
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL
+        UNIQUE KEY name (name)
      );
-     ```     
+     ```
 
+   - Posts table:
+     ```
+     CREATE TABLE posts (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        date datetime NOT NULL,
+        body text NOT NULL,
+        title varchar(255) NOT NULL,
+        ownerId INT NOT NULL,
+        likes INT NOT NULL DEFAULT 0,
+        isPending BOOLEAN DEFAULT TRUE,
+        UNIQUE KEY title (title),
+        FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+     );
+     ```
+     
+   - Post_tags table:
+     ```
+     CREATE TABLE post_tags (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        postId INT NOT NULL,
+        tagId INT NOT NULL,
+        FOREIGN KEY (postId) REFERENCES posts (id) ON DELETE CASCADE,
+        FOREIGN KEY (tagId) REFERENCES tags (id) ON DELETE CASCADE
+     );
+
+   - Comments table:
+     ```
+     CREATE TABLE comments (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        date datetime NOT NULL,
+        body text NOT NULL,
+        postId INT NOT NULL,
+        ownerId INT NOT NULL,
+        FOREIGN KEY (postId) REFERENCES posts (id) ON DELETE CASCADE,
+        FOREIGN KEY (ownerId) REFERENCES users (id) ON DELETE CASCADE
+     );
+     ```
+
+   - User_likes table:
+     ```
+     CREATE TABLE user_likes (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        userId INT NOT NULL,
+        postId INT NOT NULL,
+        FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (postId) REFERENCES posts (id) ON DELETE CASCADE
+     );
+     ```
 
 # 3. Downloading the project from GitHub
 
