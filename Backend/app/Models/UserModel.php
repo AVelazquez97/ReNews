@@ -189,15 +189,30 @@ class UserModel extends Model {
         return bin2hex(random_bytes(5));
     }
 
-//    // One-to-many relationship with Comment
-//    public function getComments()
-//    {
-//        return $this->hasMany('Comment', 'userID');
-//    }
-//
-//    // One-to-many relationship with Post
-//    public function getPosts()
-//    {
-//        return $this->hasMany('Post', 'userID);
-//    }
+    public function getUserName($userId) {
+        $user = $this->find($userId);
+        return $user['username'];
+    }
+
+    public function getPosts($userId) {
+        $postModel = new PostModel();
+        return $postModel->where('ownerId', $userId)->findAll();
+    }
+
+    public function getComments($userId) {
+        $commentModel = new CommentModel();
+        return $commentModel->where('ownerId', $userId)->findAll();
+    }
+
+    public function getLikedPosts($userId) {
+        $userLikeModel = new UserLikeModel();
+        $postModel = new PostModel();
+
+        $userLikes = $userLikeModel->where('userId', $userId)->findAll();
+        $posts = [];
+        foreach ($userLikes as $userLike) {
+            $posts[] = $postModel->find($userLike['postId']);
+        }
+        return $posts;
+    }
 }

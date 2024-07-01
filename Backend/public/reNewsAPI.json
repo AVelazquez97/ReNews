@@ -588,6 +588,10 @@
     },
     "tags": [
         {
+            "name": "Posts",
+            "description": "API Endpoints of Posts"
+        },
+        {
             "name": "Tags",
             "description": "API Endpoints of Tags"
         },

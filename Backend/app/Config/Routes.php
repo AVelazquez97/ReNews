@@ -31,6 +31,15 @@ $routes->group('api', ['filter' => 'cors:api'], ['namespace' => 'App\Controllers
     $routes->options('tags/(:any)', static function () {});
     /* End Tag Router */
 
+    /* Post Router */
+    $routes->get('posts', 'Posts::index');
+    $routes->get('posts/(:num)', 'Posts::show/$1');
+    $routes->post('posts', 'Posts::create');
+    $routes->delete('posts/(:num)', 'Posts::delete/$1');
+    $routes->options('posts', static function () {});
+    $routes->options('posts/(:any)', static function () {});
+    /* End Post Router */
+
 //    $routes->resource('posts', ['controller' => 'Posts']);
 //    $routes->resource('comments', ['controller' => 'Comments']);
 

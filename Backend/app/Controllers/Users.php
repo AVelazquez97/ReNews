@@ -294,6 +294,11 @@ class Users extends ResourceController {
     public function makeAdmin($id = null): ResponseInterface {
         try {
             $user = $this->userModel->findUser($id);
+
+            // TODO:
+            //  - Verify if the user is already an admin
+            //  - Verify if the user that is making the request is an admin
+
             if (!$user) { return $this->failNotFound('No Data Found with id ' . $id); }
 
             $this->userModel->makeAdmin($id);
