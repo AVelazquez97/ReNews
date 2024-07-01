@@ -30,6 +30,7 @@ export default function ProfileInfo(){
     }
 
     function handleUpdateUser(){
+        setProfileInfo({...profileInfo, id: userId()});
         validateProfileInfoForm(profileInfo, setValidation);
     }
 
@@ -45,6 +46,7 @@ export default function ProfileInfo(){
             if (!hasValidationErrors) {
                 try {
                     await usersController.updateUser(userId(), profileInfo);
+                    setAlert({visible: true, isError: false, message: "Información de perfil actualizada correctamente."});
                 } catch (error) {
                     setAlert({visible: true, isError: true, message: "Error al actualizar la información de perfil. Intente de nuevo."});
                 }
