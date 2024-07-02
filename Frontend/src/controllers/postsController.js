@@ -23,6 +23,9 @@ export const getPosts = async () => {
         return response.data;
     } catch (error) {
         if (error.response) {
+            if (error.response.status === 404 && error.response.data.messages.error === "No Posts Found") {
+                return [];
+            }
             throw new Error(`Error ${error.response.status}, intente nuevamente.`);
         } else if (error.request) {
             throw new Error('No se recibió respuesta del servidor');
@@ -78,11 +81,14 @@ export const deletePost = async (postId) => {
 }
 
 export const getPendingPosts = async () => {
-    try{
+    try {
         const response = await axios.get(`${controllerPath}/pending`);
         return response.data;
     } catch (error) {
         if (error.response) {
+            if (error.response.status === 404 && error.response.data.messages.error === "No Pending Posts Found") {
+                return [];
+            }
             throw new Error(`Error ${error.response.status}, intente nuevamente.`);
         } else if (error.request) {
             throw new Error('No se recibió respuesta del servidor');

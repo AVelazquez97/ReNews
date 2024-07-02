@@ -25,8 +25,6 @@ export default function PostModal({post,onClose, handled, setHandled, alert, set
 
     function handleReject(){
         try{
-            console.log(id);
-            console.log(post?.id);
             postController.deletePost(id);
             setConfirmationModal({visible: false, message: ""});
             setAlert({visible: true, isError: false, message: "Post rechazado correctamente."})
