@@ -26,11 +26,11 @@ export default function NewPostModal({onClose}){
         setPostData({...postData, [key]: value});
     }
 
-    function handleTagSelection(tag) {
-        if (!selectedTags.includes(tag)) {
-            setSelectedTags([...selectedTags, tag]);
+    function handleTagSelection(tagId) {
+        if (!selectedTags.includes(tagId)) {
+            setSelectedTags([...selectedTags, tagId]);
         } else{
-            setSelectedTags(selectedTags.filter(selectedTag => selectedTag !== tag));
+            setSelectedTags(selectedTags.filter(selectedTag => selectedTag !== tagId));
         }
     }
 
@@ -40,7 +40,8 @@ export default function NewPostModal({onClose}){
             ownerId: userId(),
             username: userName(),
             tags: selectedTags,
-            date: now()
+            date: now(),
+            isPending: true,
         }));
         validateNewPostForm(postData, selectedTags, setValidations);
     }
@@ -126,8 +127,8 @@ export default function NewPostModal({onClose}){
                         <SkeletonTags/>
                         :
                         tags.map(tag => (
-                            <button className={`btn btn-sm ${selectedTags.includes(tag) ? "btn-success" : "btn-outline-success"}`} key={tag.id}
-                                    onClick={() => handleTagSelection(tag)}>
+                            <button className={`btn btn-sm ${selectedTags.includes(tag.id) ? "btn-success" : "btn-outline-success"}`} key={tag.id}
+                                    onClick={() => handleTagSelection(tag.id)}>
                                 {tag.name}
                             </button>
                         ))

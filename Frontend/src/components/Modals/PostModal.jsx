@@ -11,7 +11,7 @@ import {
 } from "../../const.js";
 import ConfirmationModal from "./ConfirmationModal.jsx";
 export default function PostModal({post,onClose, handleDeletePost}){
-    const { ownerId, id, title, body, date, tags, comments } = post;
+    const { id, title, body, date, comments } = post;
 
     const [likes, setLikes] = useState(post?.likes);
     const [alreadyLiked, setAlreadyLiked] = useState(false);
@@ -79,7 +79,7 @@ export default function PostModal({post,onClose, handleDeletePost}){
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className={"d-flex flex-column justify-content-center align-items-center"}>
-                    <h4 className={"fw-semibold w-100 text-start"}> {ownerId} - {title} - {formattedDate}</h4>
+                    <h4 className={"fw-semibold w-100 text-start"}> {post?.owner?.username} - {title} - {formattedDate}</h4>
                     <Container width={"100"} height={"100"}>
                         <div className={"d-flex w-100 align-items-start mb-2"}>
                             {post?.tags?.map(tag => (
@@ -90,7 +90,9 @@ export default function PostModal({post,onClose, handleDeletePost}){
                             <Button className={`btn fw-bold p-1 ${alreadyLiked ? "btn-primary" : "btn-dark"}`}
                                     onClick={() => handleLike()}>{likes} Me gusta 👍</Button>
                         </div>
-                        <p>{body}</p>
+                        <div>
+                            <p className={"text-break"}>{body}</p>
+                        </div>
                     </Container>
                     <Container width={"100"} height={"100"} justifyContent={"start"} gap={"2"}>
                     <h5 className={"fw-semibold"}>💬 Comentarios</h5>

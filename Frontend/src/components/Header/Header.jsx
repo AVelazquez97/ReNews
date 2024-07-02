@@ -9,7 +9,7 @@ export default function Header({spaPath, setSpaPath}){
     return(
         <header className={"bg-dark d-flex align-items-center justify-content-between p-2"}>
             <img src={"./logo.svg"} alt={"ReNews logo"}/>
-                <div className="d-flex flex-row flex-wrap">
+                <div className="d-flex flex-row flex-wrap gap-2">
                     {spaPath !== SPA_PATH.LOGIN &&
                         <>
                             <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.HOME)}>Inicio</btn>

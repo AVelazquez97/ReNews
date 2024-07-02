@@ -7,10 +7,11 @@ import {notNullNotEmptyString, validateFeedSearch} from "../../utils.js";
 import {ALERT_INITIAL_STATE, VALIDATION_FEED_FORM_INITIAL_STATE} from "../../const.js";
 import * as postsController from "../../controllers/postsController.js";
 import Spinner from "../../components/Skeletons/Spinner.jsx";
+import SkeletonPostCard from "../../components/PostCard/SkeletonPostCard.jsx";
 
 export default function Feed({}) {
     const [search, setSearch] = useState("");
-    const [posts, setPosts ] = useState([]);
+    const [posts, setPosts ] = useState(null);
     const [isNewPostModalOpen, setIsNewPostModalOpen] = useState(false);
     const [searchValidations,setSearchValidations] = useState(VALIDATION_FEED_FORM_INITIAL_STATE);
     const [alert,setAlert] = useState(ALERT_INITIAL_STATE);
@@ -50,9 +51,8 @@ export default function Feed({}) {
     useEffect(() => {
         const getPosts = async () => {
             try{
-                setPosts(JSON.parse(JSON.stringify(FEED_GET_POSTS_PLACEHOLDER_RESPONSE.posts)));
-                //const posts = await postsController.getPosts();
-                //setPosts(posts);
+                const posts = await postsController.getPosts();
+                setPosts(posts.reverse());
             } catch (error) {
                 setAlert({visible: true, isError: true, message: "Error al obtener los posts. Intente de nuevo."});
             }
@@ -83,12 +83,23 @@ export default function Feed({}) {
                         </div>
                     }
                     <Container width={"75"} justifyContent={"start"} gap={"2"}>
-                        {posts.map(post => {
-                            return (
-                                <PostCard key={posts?.id} post={post}
-                                          width={"100"}/>
-                            )
-                        })}
+                        {posts === null ?
+                            <>
+                            <SkeletonPostCard/>
+                            <SkeletonPostCard/>
+                            <SkeletonPostCard/>
+                            <SkeletonPostCard/>
+                            <SkeletonPostCard/>
+                            </>
+                        :
+                            posts.map(post => {
+                                return (
+                                    <PostCard key={posts?.id} post={post}
+                                              width={"100"}/>
+                                )
+                            })
+                        }
+
                     </Container>
                 </>
             }
