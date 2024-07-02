@@ -76,3 +76,33 @@ export const deletePost = async (postId) => {
         }
     }
 }
+
+export const getPendingPosts = async () => {
+    try{
+        const response = await axios.get(`${controllerPath}/pending`);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
+        } else if (error.request) {
+            throw new Error('No se recibió respuesta del servidor');
+        } else {
+            throw new Error('Error al configurar la petición');
+        }
+    }
+}
+
+export const approvePost = async (postId) => {
+    try{
+        const response = await axios.put(`${controllerPath}/approve/${postId}`);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
+        } else if (error.request) {
+            throw new Error('No se recibió respuesta del servidor');
+        } else {
+            throw new Error('Error al configurar la petición');
+        }
+    }
+}

@@ -94,8 +94,10 @@ export default function Feed({}) {
                         :
                             posts.map(post => {
                                 return (
-                                    <PostCard key={posts?.id} post={post}
-                                              width={"100"}/>
+                                    post?.isPending === false &&
+                                        <PostCard key={posts?.id} post={post}
+                                                  width={"100"}/>
+
                                 )
                             })
                         }
