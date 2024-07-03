@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 /**
- * @OA\Info(title="ReNewsAPI", version="1.4")
+ * @OA\Info(title="ReNewsAPI", version="1.7")
  * @OA\Server(
  *      url="https://api.renews.alexisvelazquez.tech/api",
  *      description="Production Server"

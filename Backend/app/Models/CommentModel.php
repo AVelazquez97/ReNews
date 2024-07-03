@@ -90,9 +90,11 @@ class CommentModel extends Model {
         return $postModel->find($comment['postId']);
     }
 
+
     public function getOwner($commentId) {
         $comment = $this->find($commentId);
         $userModel = new UserModel();
-        return $userModel->find($comment['ownerId']);
+        $owner = $userModel->find($comment['ownerId']);
+        return ['id' => intval($owner['id']), 'username' => $owner['username']];
     }
 }

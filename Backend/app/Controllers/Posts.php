@@ -2,9 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\UserModel;
 use App\Models\PostModel;
 use App\Models\PostTagModel;
 use App\Models\TagModel;
+use App\Models\CommentModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
@@ -103,6 +105,61 @@ class Posts extends ResourceController {
 
     /**
      * @OA\Get(
+     *     path="/posts/user/{userId}",
+     *     tags={"Posts"},
+     *     summary="Get all posts by a user",
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="path",
+     *         description="The id of the user",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: Retrieved all posts by the user",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/PostOutput"))
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No posts found for the user"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
+    public function getPostsByUser($userId = null) {
+        try {
+            if (!$userId) {
+                return $this->fail('User ID is required', 400);
+            }
+
+            if(!(new UserModel())->find($userId)) {
+                return $this->failNotFound('User not found with id ' . $userId);
+            }
+
+            $posts = $this->postModel->getPostsByUserId($userId);
+
+            if (empty($posts)) {
+                return $this->respond($posts);
+            }
+
+            foreach ($posts as &$post) {
+                $this->formatPostData($post);
+            }
+
+            return $this->respond($posts);
+        } catch (\Exception $e) {
+            return $this->failServerError('An error occurred: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @OA\Get(
      *     path="/posts/{id}",
      *     tags={"Posts"},
      *     summary="Get a post by id",
@@ -140,6 +197,53 @@ class Posts extends ResourceController {
 
             $this->formatPostData($postData);
             return $this->respond($postData);
+        } catch (\Exception $e) {
+            return $this->failServerError('An error occurred: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/posts/search/{titleFragment}",
+     *     tags={"Posts"},
+     *     summary="Search for posts by title",
+     *     @OA\Parameter(
+     *         name="titleFragment",
+     *         in="path",
+     *         description="The title fragment to search for",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Success: Retrieved posts",
+     *         @OA\JsonContent(type="array", @OA\Items(ref="#/components/schemas/PostOutput"))
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid title fragment"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
+    public function searchByTitle($titleFragment = null) {
+        try {
+            if (!$titleFragment) {
+                return $this->fail('Title fragment is required', 400);
+            }
+
+            $posts = $this->postModel->like('title', $titleFragment)->findAll();
+
+            foreach ($posts as &$post) {
+                $this->formatPostData($post);
+            }
+
+            return $this->respond($posts);
         } catch (\Exception $e) {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
         }
@@ -230,6 +334,98 @@ class Posts extends ResourceController {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
         }
     }
+
+    /**
+     * @OA\Post(
+     *     path="/posts/{postId}/comment",
+     *     tags={"Posts"},
+     *     summary="Add a comment to a post",
+     *     @OA\Parameter(
+     *         name="postId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         ),
+     *         description="The id of the post to add the comment to"
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"ownerId", "body", "date"},
+     *             @OA\Property(
+     *                 property="ownerId",
+     *                 type="integer",
+     *                 description="The id of the user who is making the comment"
+     *             ),
+     *             @OA\Property(
+     *                 property="body",
+     *                 type="string",
+     *                 description="The body of the comment"
+     *             ),
+     *             @OA\Property(
+     *                 property="date",
+     *                 type="string",
+     *                 format="date-time",
+     *                 description="The date and time when the comment was made"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Comment created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(
+     *                 property="id",
+     *                 type="integer",
+     *                 description="The id of the created comment"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid input"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Post not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal server error"
+     *     )
+     * )
+     */
+    public function addComment($postId = null) {
+        try {
+            $commentData = $this->request->getJSON(true);
+
+            $requiredFields = ['ownerId', 'body', 'date'];
+            foreach ($requiredFields as $field) {
+                if (!isset($commentData[$field])) {
+                    return $this->fail('Field ' . $field . ' is required', 400);
+                }
+            }
+
+            if (!$this->postModel->find($postId)) {
+                return $this->failNotFound('Post not found with id ' . $postId);
+            }
+
+            $commentModel = new CommentModel();
+            $commentId = $commentModel->insert([
+                'ownerId' => $commentData['ownerId'],
+                'postId' => $postId,
+                'body' => $commentData['body'],
+                'date' => convertToMySQLFormat($commentData['date'])
+            ]);
+
+            return $this->respondCreated(['id' => intval($commentId)]);
+        } catch (\Exception $e) {
+            log_message('error', $e->getMessage() . 'Trace:' . $e->getTraceAsString());
+            return $this->failServerError('An error occurred: ' . $e->getMessage());
+        }
+    }
+
 
     /**
      * @OA\Put(
@@ -336,6 +532,65 @@ class Posts extends ResourceController {
             return $this->failServerError('An error occurred: ' . $e->getMessage());
         }
     }
+
+    /**
+     * @OA\Delete(
+     *     path="/posts/{postId}/comment/{commentId}",
+     *     tags={"Posts"},
+     *     summary="Delete a comment",
+     *     @OA\Parameter(
+     *         name="postId",
+     *         in="path",
+     *         description="The id of the post the comment is associated with",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="commentId",
+     *         in="path",
+     *         description="The id of the comment to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Success: Comment deleted"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Post or comment not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="An error occurred"
+     *     )
+     * )
+     */
+    public function deleteComment($postId, $commentId) {
+    try {
+        // Verificar si el post existe
+        $post = $this->postModel->find($postId);
+        if (!$post) {
+            return $this->failNotFound('Post not found with id ' . $postId);
+        }
+
+        $commentModel = new CommentModel();
+        $comment = $commentModel->find($commentId);
+        if (!$comment || $comment['postId'] != $postId) {
+            return $this->failNotFound('Comment not found with id ' . $commentId . ' for the specified post');
+        }
+
+        $commentModel->delete($commentId);
+
+        return $this->respondNoContent();
+    } catch (\Exception $e) {
+        return $this->failServerError('An error occurred: ' . $e->getMessage());
+    }
+}
 
     private function formatPostData(&$post) {
         $post['id'] = intval($post['id']);

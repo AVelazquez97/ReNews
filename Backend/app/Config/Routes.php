@@ -34,10 +34,14 @@ $routes->group('api', ['filter' => 'cors:api'], ['namespace' => 'App\Controllers
     /* Post Router */
     $routes->get('posts', 'Posts::index'); // Get all posts
     $routes->get('posts/pending', 'Posts::pendingPosts'); // Get all pending posts
+    $routes->get('posts/user/(:num)', 'Posts::getPostsByUser/$1'); // Get all posts by a user
     $routes->get('posts/(:num)', 'Posts::show/$1'); // Get a post by id
+    $routes->get('posts/search/(:any)', 'Posts::searchByTitle/$1'); // Search for posts
     $routes->post('posts', 'Posts::create'); // Create a post
+    $routes->post('posts/(:num)/comment', 'Posts::addComment/$1'); // Add a comment to a post
     $routes->put('posts/approve/(:num)', 'Posts::approvePost/$1'); // Approve a post
     $routes->delete('posts/(:num)', 'Posts::delete/$1'); // Delete a post
+    $routes->delete('posts/(:num)/comment/(:num)', 'Posts::deleteComment/$1/$2'); // Delete a comment
     $routes->options('posts', static function () {});
     $routes->options('posts/(:any)', static function () {});
     /* End Post Router */
