@@ -1,19 +1,30 @@
 import {isAdmin} from "../../utils.js";
 import {useState} from "react";
 import ConfirmationModal from "../Modals/ConfirmationModal.jsx";
+import * as usersController from "../../controllers/usersController.js";
+import * as postsController from "../../controllers/postsController.js";
+import {ALERT_INITIAL_STATE} from "../../const.js";
 
-export default function CommentCard({id, owner, body, date}){
+export default function CommentCard({postId, commentId, owner, body, date}){
     const [confirmationModal, setConfirmationModal] = useState({visible: false, message: ""});
     const [confirmationModalFunction, setConfirmationModalFunction] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [alert,setAlert] = useState(ALERT_INITIAL_STATE);
 
     function handleConfirmationModal(){
         setConfirmationModal({visible: true, message: "¿Seguro que desea eliminar este comentario?"});
         setConfirmationModalFunction(() => handleDeleteComment);
     }
 
-    function handleDeleteComment(){
-        console.log("[PLACEHOLDER] Deleting comment: ", id);
-        //postController.deleteComment(postId, comment.id);
+    async function handleDeleteComment(){
+        setIsLoading(true);
+        try{
+            await postsController.deleteComment(postId, commentId);
+            setAlert({visible: true, isError: false, message: "Comentario eliminado correctamente."});
+        } catch (error) {
+            setAlert({visible: true, isError: true, message: "Error al eliminar el comentario. Intente de nuevo."});
+        }
+        setIsLoading(false);
     }
 
     return(

@@ -1,66 +1,21 @@
 import Modal from "react-bootstrap/Modal";
 import {Button} from "react-bootstrap";
 import Container from "../Container/Container.jsx";
-import CommentCard from "../CommentCard/CommentCard.jsx";
-import {isAdmin, notNullNotEmptyString, now, userId, validateNewCommentForm} from "../../utils.js";
-import {useEffect, useState} from "react";
-import {
-    ALERT_INITIAL_STATE,
-    COMMENT_DATA_INITIAL_STATE,
-    VALIDATION_NEW_COMMENT_FORM_INITIAL_STATE,
-} from "../../const.js";
+import {isAdmin} from "../../utils.js";
+import {useState} from "react";
 import ConfirmationModal from "./ConfirmationModal.jsx";
+import CommentsSection from "./CommentsSection.jsx";
+import CreateComment from "./CreateComment.jsx";
 export default function PostModal({post,onClose, handleDeletePost}){
     const { id, title, body, date, comments } = post;
-
-    const [likes, setLikes] = useState(post?.likes);
-    const [alreadyLiked, setAlreadyLiked] = useState(false);
-
-    const [newComment, setNewComment] = useState({COMMENT_DATA_INITIAL_STATE});
-
     const dateObj = new Date(date);
     const formattedDate = `${dateObj.getDate()}/${dateObj.getMonth() + 1}/${dateObj.getFullYear()}`;
-
-    const [validations,setValidations] = useState(VALIDATION_NEW_COMMENT_FORM_INITIAL_STATE);
-    const [alert,setAlert] = useState({ALERT_INITIAL_STATE});
-
     const [confirmationModal, setConfirmationModal] = useState({visible: false, message: ""});
     const [confirmationModalFunction, setConfirmationModalFunction] = useState(null);
 
     function handleConfirmationModal(id){
         setConfirmationModal({visible: true, message: "¿Seguro que desea eliminar este post?"});
         setConfirmationModalFunction(() => handleDeletePost);
-    }
-
-    useEffect(() => {
-        if(validations?.body?.message !== ""){
-            console.log("[PLACEHOLDER] Validation failed, please check the form for errors.");
-            setAlert(ALERT_INITIAL_STATE);
-        } else {
-            console.log("[PLACEHOLDER] Creating comment: ", newComment);
-            //postController.createPost(postData);
-            setAlert({visible: true, isError: false, message: "Comentario creado correctamente."});
-            setNewComment(COMMENT_DATA_INITIAL_STATE);
-        }
-    }, [validations]);
-
-    function handleLike(){
-        alreadyLiked ? setLikes(likes - 1) : setLikes(likes + 1);
-        setAlreadyLiked(!alreadyLiked);
-    }
-
-    function updateNewCommentData(value, key){
-        setNewComment({...newComment, [key]: value});
-    }
-
-    function handleNewComment(){
-        setNewComment((prevState) => ({
-            ...prevState,
-            ownerId: userId(),
-            postId: id,
-            date: now()
-        }));
-        validateNewCommentForm(newComment, setValidations);
     }
 
     return (
@@ -86,47 +41,12 @@ export default function PostModal({post,onClose, handleDeletePost}){
                                 <span key={tag.id} className="badge rounded-pill text-bg-success me-1">{tag.name}</span>
                             ))}
                         </div>
-                        <div className={"w-100 text-start mb-1 mt-1"}>
-                            <Button className={`btn fw-bold p-1 ${alreadyLiked ? "btn-primary" : "btn-dark"}`}
-                                    onClick={() => handleLike()}>{likes} Me gusta 👍</Button>
-                        </div>
                         <div>
                             <p className={"text-break"}>{body}</p>
                         </div>
                     </Container>
-                    <Container width={"100"} height={"100"} justifyContent={"start"} gap={"2"}>
-                    <h5 className={"fw-semibold"}>💬 Comentarios</h5>
-                        {comments.map(comment => {
-                            const commentDate = new Date(comment.date);
-                            const formattedCommentDate = `${commentDate.getDate()}/${commentDate.getMonth() + 1}/${commentDate.getFullYear()}`;
-                            return (
-                                <CommentCard key={comment.id} owner={comment.ownerId} id={comment.id}
-                                             body={comment.body} date={formattedCommentDate}/>
-                            );
-                        })}
-                    </Container>
-                    <Container width={"100"} height={"100"} justifyContent={"start"} gap={"2"}>
-                        <h5 className={"fw-semibold"}>💬 Agrega un comentario</h5>
-                        {alert?.visible && alert?.isError === false &&
-                            <div className={`alert mt-2 alert-${alert.isError ? "danger" : "success"}`}>
-                                {alert.message}
-                            </div>
-                        }
-                        {
-                            notNullNotEmptyString(validations?.body?.message) &&
-                            <div className={`alert mt-2 alert-danger`}>
-                                {validations?.body?.message}
-                            </div>
-                        }
-                        <form className={"text-start w-100"}>
-                            <textarea type="text" className="form-control" value={newComment?.body}
-                                      onChange={e => updateNewCommentData(e.target.value, "body")}/>
-                        </form>
-                        <div className={"d-flex w-100 justify-content-end"}>
-                            <Button className={"btn btn-primary fw-bold"} onClick={() => handleNewComment()}>Enviar comentario</Button>
-                        </div>
-
-                    </Container>
+                    <CommentsSection comments={comments}/>
+                    <CreateComment postId={post?.id}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button className={"btn btn-dark fw-bold"} onClick={onClose}>Cerrar</Button>

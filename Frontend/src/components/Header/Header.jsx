@@ -17,8 +17,6 @@ export default function Header({spaPath, setSpaPath}){
                             { isAdmin() && <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.PENDING)}>Pendientes</btn>}
                             <btn className="btn btn-dark fw-bold" onClick={() => setRoute(SPA_PATH.PROFILE)}>{userName()}</btn>
                             <btn className="btn btn-danger fw-bold" onClick={() => setRoute(SPA_PATH.LOGIN)}>Cerrar sesión</btn>
-                            <img width={25} height={25} alt={"avatar"} src={"./default-profile-picture.jpg"}
-                                 className={"rounded-circle m-2"}/>
                         </>
                     }
                 </div>

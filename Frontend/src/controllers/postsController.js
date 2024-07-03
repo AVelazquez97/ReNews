@@ -112,3 +112,33 @@ export const approvePost = async (postId) => {
         }
     }
 }
+
+export const createComment = async (commentData) => {
+    try{
+        const response = await axios.post(`${controllerPath}/comments`, commentData);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
+        } else if (error.request) {
+            throw new Error('No se recibió respuesta del servidor');
+        } else {
+            throw new Error('Error al configurar la petición');
+        }
+    }
+}
+
+export const deleteComment = async (commentId) => {
+    try{
+        const response = await axios.delete(`${controllerPath}/comments/${commentId}`);
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
+        } else if (error.request) {
+            throw new Error('No se recibió respuesta del servidor');
+        } else {
+            throw new Error('Error al configurar la petición');
+        }
+    }
+}

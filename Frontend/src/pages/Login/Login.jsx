@@ -212,12 +212,6 @@ export default function Login({setSpaPath}){
                                     </div>
                                 }
                             </div>
-
-                            <div className="mb-3">
-                                <label className="form-label">Imagen de perfil</label>
-                                <input className="form-control form-control-sm" type="file"
-                                       onChange={handleFileChange}/>
-                            </div>
                         </>
                     }
                 </form>

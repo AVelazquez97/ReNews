@@ -80,11 +80,6 @@ export default function ProfileInfo(){
                 <p className={"fs-3 fw-bold"}> Perfil </p>
                     <form className={"text-start"}>
                         <div className="mb-3">
-                            <label className="form-label">Imagen de perfil</label>
-                            <input className="form-control form-control-sm" type="file"
-                                   onChange={handleFileChange}/>
-                        </div>
-                        <div className="mb-3">
                             <label className="form-label">Nombre</label>
                             <input type="text" className="form-control" value={profileInfo.name}
                                    onChange={e => updateProfileInfo(e.target.value, "name")}/>
