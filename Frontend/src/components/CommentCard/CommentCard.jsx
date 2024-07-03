@@ -34,8 +34,13 @@ export default function CommentCard({postId, commentId, owner, body, date}){
                                                              onConfirm={confirmationModalFunction}
                                                              message={confirmationModal.message}/>}
             <div className={"card p-2 w-100 d-flex flex-row align-items-start justify-content-between"}>
-
                 <div>
+                    {
+                        alert.visible &&
+                        <div className={`alert mt-2 alert-${alert.isError ? "danger" : "success"}`}>
+                            {alert.message}
+                        </div>
+                    }
                     <div className={"d-flex flex-row justify-content-start align-items-center"}>
                         <h5 className={"fw-semibold"}>{owner.username}</h5>
                     </div>

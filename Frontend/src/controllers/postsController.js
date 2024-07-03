@@ -131,9 +131,9 @@ export const createComment = async (postId, commentData) => {
     }
 }
 
-export const deleteComment = async (commentId) => {
+export const deleteComment = async (postId, commentId) => {
     try{
-        const response = await axios.delete(`${controllerPath}/comments/${commentId}`);
+        const response = await axios.delete(`${controllerPath}/${postId}/comment/${commentId}`);
         return response.data;
     } catch (error) {
         if (error.response) {

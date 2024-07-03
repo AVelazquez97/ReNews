@@ -18,7 +18,6 @@ export default function PostModal({post,onClose, handleDeletePost}){
         setConfirmationModalFunction(() => handleDeletePost);
     }
 
-    console.log(post);
     return (
         <>
             {confirmationModal.visible && <ConfirmationModal isOpen={confirmationModal.visible}
@@ -46,7 +45,7 @@ export default function PostModal({post,onClose, handleDeletePost}){
                             <p className={"text-break"}>{body}</p>
                         </div>
                     </Container>
-                    <CommentsSection comments={comments}/>
+                    <CommentsSection comments={comments} postId={id}/>
                     <CreateComment postId={post?.id}/>
                 </Modal.Body>
                 <Modal.Footer>
