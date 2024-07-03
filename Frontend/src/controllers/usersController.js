@@ -29,7 +29,7 @@ export const loginUser = async (formData) => {
 
 export const forgotPassword = async (mail) => {
     try {
-        const response = await axios.post(`${controllerPath}forgotPassword`, { email: mail });
+        const response = await axios.post(`${controllerPath}forgotPassword`, {email: mail});
         return response.data;
     } catch (error) {
         if (error.response) {

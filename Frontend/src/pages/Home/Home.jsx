@@ -5,15 +5,14 @@ import ImageCard from "../../components/ImageCard/ImageCard.jsx";
 import PostCard from "../../components/PostCard/PostCard.jsx";
 import {useEffect, useState} from "react";
 import PostModal from "../../components/Modals/PostModal.jsx";
+import * as postsController from "../../controllers/postsController.js";
+import SkeletonPostCard from "../../components/PostCard/SkeletonPostCard.jsx";
 
 export default function Home({}){
-    const [trendingPosts, setTrendingPosts] = useState([]);
+    const [recentPosts, setRecentPosts] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    useEffect(() => {
-        setTrendingPosts(JSON.parse(JSON.stringify(HOME_GET_TRENDING_POSTS_PLACEHOLDER_RESPONSE.posts)));
-    }, []);
+    const [alert, setAlert] = useState({visible: false, isError: false, message: ""});
 
     function handlePostClick(post) {
         setSelectedPost(post);
@@ -24,6 +23,24 @@ export default function Home({}){
         setIsModalOpen(false);
         setSelectedPost(null);
     }
+
+    /* fetch the posts */
+    useEffect(() => {
+        const getPosts = async () => {
+            try{
+                const recentPosts = await postsController.getPosts();
+
+                const filteredPosts = recentPosts.reverse().filter(post => post.isPending === false);
+
+                setRecentPosts(filteredPosts.splice(0,3));
+
+            } catch (error) {
+                setAlert({visible: true, isError: true, message: "Error al obtener los posts recientes. Intente de nuevo."});
+            }
+        }
+
+        getPosts();
+    }, []);
 
     return (
         <div className={"flex-grow-1 d-flex flex-column h-100 bg-white pageContent overflow-y-scroll"}>
@@ -46,14 +63,23 @@ export default function Home({}){
             </div>
             <div className="container text-center p-2">
                 <div className="row mb-2">
-                    <p className={"fs-5 fw-bold"}> 🚀 Posts en tendencia </p>
+                    <p className={"fs-5 fw-bold"}> ⏳ Posts recientes </p>
                     <div className="row mb-2 gap-2">
-                        {trendingPosts.map(post => {
-                            return (
-                                <PostCard key={post.id} post={post}
-                                          width={"100%"} onClick={() => handlePostClick(post)}/>
-                            )
-                        })}
+                        {
+                            recentPosts === null ?
+                                <>
+                                    <SkeletonPostCard/>
+                                    <SkeletonPostCard/>
+                                    <SkeletonPostCard/>
+                                </>
+                                :
+                                recentPosts.map(post => {
+                                    return (
+                                        <PostCard key={post.id} post={post}
+                                                  width={"100%"} onClick={() => handlePostClick(post)}/>
+                                    )
+                                })
+                        }
                     </div>
                 </div>
             </div>
