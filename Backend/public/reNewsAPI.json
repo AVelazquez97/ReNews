@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "ReNewsAPI",
-        "version": "1.4"
+        "version": "1.7"
     },
     "servers": [
         {
@@ -112,6 +112,47 @@
                 }
             }
         },
+        "/posts/user/{userId}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get all posts by a user",
+                "operationId": "8ebe446c97289b7a2e1eb3d63eef226f",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The id of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Retrieved all posts by the user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostOutput"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No posts found for the user"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
         "/posts/{id}": {
             "get": {
                 "tags": [
@@ -179,6 +220,124 @@
                 }
             }
         },
+        "/posts/search/{titleFragment}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Search for posts by title",
+                "operationId": "67ef84ed5d3dcb73db78ce763dda4def",
+                "parameters": [
+                    {
+                        "name": "titleFragment",
+                        "in": "path",
+                        "description": "The title fragment to search for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success: Retrieved posts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostOutput"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid title fragment"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/posts/{postId}/comment": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Add a comment to a post",
+                "operationId": "ac39bef9b1e539a854bf7618ef1d8f7f",
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "description": "The id of the post to add the comment to",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ownerId",
+                                    "body",
+                                    "date"
+                                ],
+                                "properties": {
+                                    "ownerId": {
+                                        "description": "The id of the user who is making the comment",
+                                        "type": "integer"
+                                    },
+                                    "body": {
+                                        "description": "The body of the comment",
+                                        "type": "string"
+                                    },
+                                    "date": {
+                                        "description": "The date and time when the comment was made",
+                                        "type": "string",
+                                        "format": "date-time"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Comment created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "description": "The id of the created comment",
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "404": {
+                        "description": "Post not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
         "/posts/approve/{id}": {
             "put": {
                 "tags": [
@@ -219,6 +378,46 @@
                     },
                     "404": {
                         "description": "Post not found"
+                    },
+                    "500": {
+                        "description": "An error occurred"
+                    }
+                }
+            }
+        },
+        "/posts/{postId}/comment/{commentId}": {
+            "delete": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Delete a comment",
+                "operationId": "556a7d855efb8a47d7c1370367dd7e42",
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "description": "The id of the post the comment is associated with",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "The id of the comment to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Success: Comment deleted"
+                    },
+                    "404": {
+                        "description": "Post or comment not found"
                     },
                     "500": {
                         "description": "An error occurred"

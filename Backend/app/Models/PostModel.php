@@ -172,10 +172,14 @@ class PostModel extends Model {
     protected $useAutoIncrement = true;
     protected $allowedFields = ['title', 'body', 'date', 'likes', 'ownerId', 'isPending'];
 
+    public function getPostsByUserId($userId) {
+        return $this->where('ownerId', $userId)->findAll();
+    }
+
     public function doesPostExist($title): bool {
-    $post = $this->where('title', $title)->first();
-    return $post !== null;
-}
+        $post = $this->where('title', $title)->first();
+        return $post !== null;
+    }
 
     public function getPendingPosts() {
         return $this->where('isPending', true)->findAll();
@@ -187,7 +191,14 @@ class PostModel extends Model {
 
     public function getComments($postId) {
         $commentModel = new CommentModel();
-        return $commentModel->where('postId', $postId)->findAll();
+        $commentData = $commentModel->where('postId', $postId)->findAll();
+        helper('date');
+        foreach ($commentData as &$comment) {
+            $comment['owner'] = $commentModel->getOwner($comment['id']);
+            $comment['date'] = convertToISO8601Format($comment['date']);
+            unset($comment['ownerId']);
+        }
+        return $commentData;
     }
 
     public function getOwner($postId) {

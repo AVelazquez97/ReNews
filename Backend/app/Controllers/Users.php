@@ -242,17 +242,16 @@ class Users extends ResourceController {
      */
     public function forgotPassword(): ResponseInterface  {
         try {
-            $email = $this->request->getJSON(true);
+            $data = $this->request->getJSON(true);
 
-            if (!isset($email['email'])) {
+            if (!isset($data['email'])) {
                 return $this->fail('Field email is required', 400);
             }
 
-
-            $user = $this->userModel->getUserByEmail($email);
+            $user = $this->userModel->getUserByEmail($data['email']);
 
             if (!$user) {
-                return $this->failNotFound('No User Found with email ' . $email);
+                return $this->failNotFound('No User Found with email ' . $data['email']);
             }
 
             /*
@@ -262,7 +261,7 @@ class Users extends ResourceController {
             $hashedPassword = $this->userModel->hashPassword($newGeneratedPassword);
             $this->userModel->update($user['id'], ['password' => $hashedPassword]);
             $emailService = new EmailService();
-            $emailService->sendNewPasswordEmail($email, $newGeneratedPassword);
+            $emailService->sendNewPasswordEmail($data['email'], $newGeneratedPassword);
 
             return $this->respond('New password email sent');
         } catch (\Exception $e) {
