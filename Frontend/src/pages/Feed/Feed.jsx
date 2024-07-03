@@ -36,7 +36,8 @@ export default function Feed({}) {
 
             if (!hasValidationErrors) {
                 try {
-                    await postsController.searchPosts(search);
+                    const searchResults = await postsController.searchPosts(search);
+                    setPosts(searchResults);
                 } catch (error) {
                     setAlert({visible: true, isError: true, message: "Error al buscar los posts. Intente de nuevo."});
                 }

@@ -55,7 +55,7 @@ export const createPost = async (postData) => {
 
 export const searchPosts = async (search) => {
     try{
-        const response = await axios.get(`${controllerPath}${search}`);
+        const response = await axios.get(`${controllerPath}/search/${search}`);
         return response.data;
     } catch (error) {
         if (error.response) {
