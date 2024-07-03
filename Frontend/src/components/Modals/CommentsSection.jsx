@@ -1,6 +1,5 @@
 import CommentCard from "../CommentCard/CommentCard.jsx";
 import Container from "../Container/Container.jsx";
-import {post} from "axios";
 
 export default function CommentsSection({postId, comments}){
     return(
@@ -13,7 +12,7 @@ export default function CommentsSection({postId, comments}){
                     <CommentCard key={comment.id}
                                  postId={postId}
                                  commentId={comment.id}
-                                 owner={comment.ownerId}
+                                 owner={comment.owner}
                                  body={comment.body}
                                  date={formattedCommentDate}/>
                 );

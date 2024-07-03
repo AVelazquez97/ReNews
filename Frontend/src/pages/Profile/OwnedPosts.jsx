@@ -19,9 +19,8 @@ export default function OwnedPosts({setSpaPath}){
     useEffect(() => {
         const getOwnedPosts = async () => {
             try{
-                setOwnedPosts(JSON.parse(JSON.stringify(FEED_GET_POSTS_PLACEHOLDER_RESPONSE.posts)));
-                //const posts = await postsController.getOwnedPosts(userId());
-                //setOwnedPosts(posts);
+                const posts = await postsController.getOwnedPosts(userId());
+                setOwnedPosts(posts);
             } catch (error) {
                 setAlert({visible: true, isError: true, message: "Error al obtener los posts. Intente de nuevo."});
             }

@@ -18,6 +18,7 @@ export default function PostModal({post,onClose, handleDeletePost}){
         setConfirmationModalFunction(() => handleDeletePost);
     }
 
+    console.log(post);
     return (
         <>
             {confirmationModal.visible && <ConfirmationModal isOpen={confirmationModal.visible}

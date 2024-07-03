@@ -63,8 +63,6 @@ export default function UserCard({user}){
                 {isLoading && <Spinner/>}
                 <div className={"w-100 p-2"}>
                     <div className={"d-flex flex-column justify-content-start align-items-center"}>
-                        <img width={25} height={25} alt={"avatar"} src={"./default-profile-picture.jpg"}
-                             className={"rounded-circle m-2"}/>
                         <h5 className={"fw-semibold"}>{user?.username}</h5>
 
                         <div className={"d-flex flex-column w-100 align-items-start"}>

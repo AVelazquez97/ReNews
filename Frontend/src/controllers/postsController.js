@@ -4,11 +4,14 @@ const controllerPath = `${API_URL}/posts`;
 
 export const getOwnedPosts = async (userId) => {
     try{
-        const response = await axios.get(`${controllerPath}${userId}`);
+        const response = await axios.get(`${controllerPath}/user/${userId}`);
         return response.data;
     } catch (error) {
         if (error.response) {
-            throw new Error(`Error ${error.response.status}, verifique que el usuario exista e intente nuevamente.`);
+            if (error.response.status === 404 && error.response.data.messages.error === "No Posts Found") {
+                return [];
+            }
+            throw new Error(`Error ${error.response.status}, intente nuevamente.`);
         } else if (error.request) {
             throw new Error('No se recibió respuesta del servidor');
         } else {
@@ -113,9 +116,9 @@ export const approvePost = async (postId) => {
     }
 }
 
-export const createComment = async (commentData) => {
+export const createComment = async (postId, commentData) => {
     try{
-        const response = await axios.post(`${controllerPath}/comments`, commentData);
+        const response = await axios.post(`${controllerPath}/${postId}/comment`, commentData);
         return response.data;
     } catch (error) {
         if (error.response) {

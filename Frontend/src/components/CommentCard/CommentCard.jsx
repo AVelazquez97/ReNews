@@ -37,9 +37,7 @@ export default function CommentCard({postId, commentId, owner, body, date}){
 
                 <div>
                     <div className={"d-flex flex-row justify-content-start align-items-center"}>
-                        <img width={25} height={25} alt={"avatar"} src={"./default-profile-picture.jpg"}
-                             className={"rounded-circle m-2"}/>
-                        <h5 className={"fw-semibold"}>{owner}</h5>
+                        <h5 className={"fw-semibold"}>{owner.username}</h5>
                     </div>
                     <h5 className={"fs-6"}>{date}</h5>
                     <p>{body}</p>

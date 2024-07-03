@@ -26,7 +26,7 @@ export default function CreateComment({postId}){
 
             if (!hasValidationErrors) {
                 try {
-                    await postsController.createComment(newComment);
+                    await postsController.createComment(postId, newComment);
                     setAlert({visible: true, isError: false, message: "Comentario creado correctamente."});
                     setNewComment(COMMENT_DATA_INITIAL_STATE);
                 } catch (error) {
