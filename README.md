@@ -1,4 +1,4 @@
-![logo](https://github.com/ignfer/ReNews/blob/main/renews-logo.png)
+![logo](https://github.com/AVelazquez97/ReNews/blob/main/renews-logo.png)
 # ReNews
 A simple Tech news blog, with a React frontend and a CodeIgniter backend.
 
